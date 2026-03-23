@@ -15,7 +15,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address']
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
+    },
+    bio: {
+      type: String,
+    },
+    profession: {
+      type: String,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
     },
     password: {
       type: String,
@@ -54,20 +64,19 @@ const userSchema = new mongoose.Schema(
         ref: "Reel",
       },
     ],
-    story:{
-     
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Story",
+    story: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Story",
     },
     resetOtp: {
       type: String,
     },
     otpExpire: {
-      type: Date
+      type: Date,
     },
     isOtpVerify: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   { timestamps: true },
 );

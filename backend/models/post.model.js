@@ -27,14 +27,19 @@ const postSchema = new mongoose.Schema(
     ],
     comments: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        author: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        message: {
+          type: String
+        }
       },
     ],
   },
   { timestamps: true },
 );
 
-const Post = mongoose.model("Post", postSchema)
+const Post = mongoose.model("Post", postSchema);
 
-export default Post
+export default Post;

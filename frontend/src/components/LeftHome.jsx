@@ -7,16 +7,15 @@ import { useAuth } from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 import { setsuggestedUsers } from "../redux/userSlice";
-import OutherUser from "./OutherUser";
+import OtherUser from "./OtherUser";
 
 const LeftHome = () => {
   const { userData, suggestedUsers } = useSelector((state) => state.user);
   const { handleLogOut, handleSuggestedUser } = useAuth();
   const dispatch = useDispatch();
 
-  const handleLogOutUser = async () => {
+const handleLogOutUser = async () => {
     const data = await handleLogOut();
-    dispatch(setUserData(data.user));
   };
 
   useEffect(() => {
@@ -41,7 +40,7 @@ const LeftHome = () => {
             <img
               src={userData.profileImage || dp}
               alt=""
-              className="w-full object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
           <div>
@@ -65,7 +64,7 @@ const LeftHome = () => {
         {suggestedUsers &&
           suggestedUsers
             .slice(0, 5)
-            .map((user, index) => <OutherUser index={index} user={user} />)}
+            .map((user, index) => <OtherUser index={index} user={user} />)}
       </div>
     </div>
   );
