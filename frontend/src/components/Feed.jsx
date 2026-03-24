@@ -3,8 +3,11 @@ import logo from "../assets/react.svg";
 import { GoHeart } from "react-icons/go";
 import StoryDp from "./StoryDp";
 import Nav from "./Nav";
-
+import Post from "../components/Post";
+import { useSelector } from "react-redux";
 const Feed = () => {
+  const { postData } = useSelector((state) => state.post);
+
   return (
     <div className="lg:w-[50%] w-full bg-black min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto">
       <div className="w-full h-[100px] flex items-center justify-between p-[20px] lg:hidden">
@@ -36,6 +39,10 @@ gap-[20px] p-[10px] pt-[40px] bg-white rounded-t-[60px] relative
 pb-[120px]"
       >
         <Nav />
+
+        {postData?.map((post, index) => (
+          <Post index={index} postData={post} />
+        ))}
       </div>
     </div>
   );

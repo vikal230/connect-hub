@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const handleSignup = async ({ name, userName, email, password }) => {
     try {
       const data = await signup({ name, userName, email, password });
@@ -149,6 +150,8 @@ export const useAuth = () => {
       throw error;
     }
   };
+
+  
   return {
     handleSignup,
     handleSignIn,

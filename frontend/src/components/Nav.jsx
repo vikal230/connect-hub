@@ -22,7 +22,7 @@ shadow-2xl shadow-[#000000] z-[100]"
         <FaSearch className="text-white w-[25px] cursor-pointer h-[25px]" />
       </div>
       <div>
-        <GoPlus className="text-white w-[25px] cursor-pointer h-[25px]" />
+        <GoPlus className="text-white w-[25px] cursor-pointer h-[25px]" onClick={() => navigate("/upload")}/>
       </div>
       <div>
         <GoVideo className="text-white w-[25px] cursor-pointer h-[25px]" />

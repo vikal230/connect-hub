@@ -14,7 +14,9 @@ import { uploadCloudinary } from "../config/cloudinary.js";
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.userId;
-    const user = await User.findById(userId).select("-password").populate("posts")
+    const user = await User.findById(userId).select("-password")
+    .populate("posts")
+     .populate("reels")
     if (!user) {
       return res.status(401).json({
         success: false,

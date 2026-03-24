@@ -12,9 +12,10 @@ export const uploadCloudinary = async (file) => {
       resource_type: "auto",
     });
     fs.unlinkSync(file);
-    return result;
+    return result.secure_url;
   } catch (error) {
     console.log(error);
-    fs.unlinkSync(file);
-  }
-};
+    if (fs.existsSync(file)) fs.unlinkSync(file);
+    throw error;
+}
+}

@@ -67,7 +67,10 @@ export const getCurrentUser = async () => {
     const response = await api.get("/api/user/current");
     console.log(await response.data);
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    console.log("get current user error: ", error)
+    throw error
+  }
 };
 
 export const LogOut = async (req, res) => {
@@ -125,5 +128,64 @@ export const editProfile = async ({
       
     )
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+   console.log(error)
+   throw error
+  }
 };
+
+export const uploadPostApi = async ({caption, mediaType, file}) => {
+  try {
+    const formData = new FormData()
+    formData.append("caption", caption)
+    formData.append("mediaType", mediaType)
+    formData.append("media", file)
+    const response = await api.post("/api/post/upload", formData)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log("upload post error", error)
+    throw error
+  }
+}
+
+export const uploadStoryApi = async ({mediaType, file}) => {
+  try {
+    const formData = new FormData()
+    formData.append("mediaType", mediaType)
+    formData.append("media", file)
+    const response = await api.post("/api/story/upload", formData)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log("upload post error", error)
+    throw error
+  }
+}
+
+export const uploadReelApi = async ({caption, file}) => {
+  try {
+    const formData = new FormData()
+    formData.append("media", file)
+    formData.append("caption", caption)
+    // console.log(formData.get("media"));
+    const response = await api.post("/api/reel/upload", formData)
+    // console.log("file to upload:",file)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log("upload post error", error)
+    throw error
+  }
+}
+
+export const fetchAllPostApi = async () => {
+  try {
+    const response = await api.get("/api/post/getall")
+    console.log(response.data)
+    return response.data
+    } catch (error) {
+    console.log("fetch all post error", error)
+    throw error
+  }
+}

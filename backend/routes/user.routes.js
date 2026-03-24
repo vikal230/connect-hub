@@ -6,7 +6,6 @@ import {
   getProfile,
   suggestedUser,
 } from "../controllers/user.controller.js";
-import { uploadCloudinary } from "../config/cloudinary.js";
 import { upload } from "../config/multer.js";
 export const userRoutes = express.Router();
 

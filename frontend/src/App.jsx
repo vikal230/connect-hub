@@ -9,10 +9,16 @@ import { useAuth } from "./hooks/useAuth";
 import Loader from "./components/Loader";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import Upload from "./pages/Upload";
+import {usePostStoryReelHook} from "./hooks/usePostStoryReelHook"
+
 const App = () => {
   const { handleGetCurrentUser } = useAuth();
+  const {handleFetchedAllpost} = usePostStoryReelHook()
   useEffect(() => {
     handleGetCurrentUser();
+    handleFetchedAllpost()
+
   }, []);
 
   const { userData, loading } = useSelector((state) => state.user);
@@ -53,6 +59,11 @@ const App = () => {
         <Route
           path="/editprofile"
           element={userData ? <EditProfile /> : <Navigate to={"/signin"} />}
+        />
+
+        <Route
+          path="/upload"
+          element={userData ? <Upload /> : <Navigate to={"/signin"} />}
         />
       </Routes>
     </>

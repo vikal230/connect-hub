@@ -22,13 +22,18 @@ const reelSchema = new mongoose.Schema(
     ],
     comments: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        author: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        message: {
+          type: String,
+        },
       },
     ],
   },
   { timestamps: true },
 );
 
-const Reel = mongoose.model("Loop", reelSchema)
-export default Reel
+const Reel = mongoose.model("Reel", reelSchema);
+export default Reel;

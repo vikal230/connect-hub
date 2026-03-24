@@ -1,7 +1,6 @@
-import { populate } from "dotenv";
-import { uploadCloudinary } from "../config/cloudinary";
-import Post from "../models/post.model";
-import User from "../models/user.model";
+import { uploadCloudinary } from "../config/cloudinary.js";
+import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
 import fs from "fs";
 // export const uploadPost = async (req, res) => {
 //   try {
@@ -116,15 +115,21 @@ export const uploadPost = async (req, res) => {
 
     // 1. Cloudinary par upload
     const mediaResult = await uploadCloudinary(req.file.path);
-
+    if (!mediaResult) {
+      return res.status(500).json({
+        success: false,
+        message: "Cloudinary upload failed!",
+      });
+    }
     if (fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
     }
 
+    console.log("post controller upload", mediaResult);
     const post = await Post.create({
       caption,
       mediaType,
-      media: mediaResult.secure_url,
+      media: mediaResult,
       author: req.userId,
     });
 
@@ -149,9 +154,10 @@ export const uploadPost = async (req, res) => {
 
 export const getAllPost = async (req, res) => {
   try {
-    const posts = await Post.find({ author: req.userId })
-      .populate("author", "name userName profileImage")
-      .sort({ createdAt: -1 });
+    const posts = await Post.find({}).populate(
+      "author",
+      "name userName profileImage",
+    );
 
     return res.status(200).json({
       success: true,
@@ -222,10 +228,16 @@ export const comments = async (req, res) => {
       message,
     });
 
-    await User.save()
+    await post.save();
 
-      .populate("author", "name userName profileImage");
-    post.populate("comments.author");
+    await post.populate("author", "name userName profileImage");
+    await post.populate("comments.author", "name userName profileImage");
+
+    return res.status(200).json({
+      success: true,
+      message: "Comment added successfully!",
+      post: post,
+    });
   } catch (error) {
     return res.status(500).json({
       message: `comments error ${error}`,
@@ -270,19 +282,20 @@ export const saved = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
       isSaved ? { $pull: { saved: postId } } : { $addToSet: { saved: postId } },
-      { new: true }
+      { new: true },
     ).populate("saved");
 
     return res.status(200).json({
       success: true,
-      message: isSaved ? "Post unsaved successfully!" : "Post saved successfully!",
-      user: updatedUser
+      message: isSaved
+        ? "Post unsaved successfully!"
+        : "Post saved successfully!",
+      user: updatedUser,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `Post saved error: ${error.message}`
+      message: `Post saved error: ${error.message}`,
     });
   }
 };
