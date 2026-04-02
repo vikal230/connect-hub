@@ -1,9 +1,11 @@
 import React from "react";
 import dp from "../assets/dp.png";
 import { useNavigate } from "react-router-dom";
+import FollowButton from "./FollowButton";
 
 const OtherUser = ({ user }) => {
   const navigate = useNavigate()
+    // console.log("suggested user", user.userName, user._id);
   return (
     <div
       className="w-full h-[80px] flex items-center
@@ -33,9 +35,7 @@ justify-between border-b-2 border-gray-800"
           </div>
         </div>
       </div>
-      <button className="px-[10px] w-[100px] py-[5px] h-[40px] bg-[blue] rounded-2xl text-white">
-        Follow
-      </button>
+    <FollowButton tailwind={"px-[10px] w-[100px] py-[5px] h-[40px] bg-[blue] rounded-2xl text-white"} targetUserId={user._id}/>
     </div>
   );
 };

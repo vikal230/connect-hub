@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const storySlice = createSlice({
   name: "story",
   initialState: {
-    storyData: []
+    storyData: [],
+    storyList: [],
+    currentUserStory: [],
   },
 
   reducers: {
@@ -11,11 +13,18 @@ const storySlice = createSlice({
       if (Array.isArray(action.payload)) {
         state.storyData = action.payload;
       } else {
-        state.storyData = [action.payload, state.storyData];
+        state.storyData = [action.payload, ...state.storyData];
       }
+    },
+    setStoryList: (state, action) => {
+      state.storyList = action.payload;
+    },
+    setCurentUserStory: (state, action) => {
+      state.currentUserStory = action.payload;
     },
   },
 });
 
-export const { setStoryData } = storySlice.actions;
+export const { setStoryData, setStoryList, setCurentUserStory } =
+  storySlice.actions;
 export default storySlice.reducer;

@@ -2,6 +2,9 @@ import { uploadCloudinary } from "../config/cloudinary.js";
 import fs from "fs";
 import Reel from "../models/reel.model.js";
 import User from "../models/user.model.js";
+import { getSocketId, io } from "../socket.js";
+import Notification from "../models/notification.model.js";
+
 
 export const uploadReel = async (req, res) => {
   try {
@@ -26,7 +29,7 @@ export const uploadReel = async (req, res) => {
     // 4. DB SAVE
     const reel = await Reel.create({
       caption,
-      media: mediaResult.secure_url,
+      media: mediaResult,
       author: req.userId,
     });
 
@@ -66,7 +69,30 @@ export const like = async (req, res) => {
         ? { $pull: { likes: req.userId } }
         : { $addToSet: { likes: req.userId } },
       { new: true },
-    ).populate("author", "name userName profileImage");
+    )
+      .populate("author", "name userName profileImage")
+      .populate("comments.author", "name userName profileImage");
+
+    if (!isLiked && reel.author.toString() !== req.userId.toString()) {
+      const newNotification = await Notification.create({
+        sender: req.userId,
+        receiver: reel.author,
+        message: "liked your reel",
+        type: "like",
+        reel: reelId,
+      });
+
+      const populatedNotification = await newNotification.populate(
+        "sender receiver reel",
+      );
+
+      const receiverSocketId = getSocketId(reel.author);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newNotification", populatedNotification);
+      }
+    }
+
+    io.emit("likedReel", updateReel);
 
     return res.status(200).json({
       success: true,
@@ -88,6 +114,7 @@ export const comments = async (req, res) => {
     const { message } = req.body;
     const reelId = req.params.reelId;
     const reel = await Reel.findById(reelId);
+    const senderId = req.userId;
 
     if (!reel) {
       return res.status(400).json({
@@ -101,9 +128,29 @@ export const comments = async (req, res) => {
       message,
     });
 
+    if (reel.author.toString() !== senderId) {
+      const newNotification = await Notification.create({
+        sender: req.userId,
+        receiver: reel.author,
+        message: "commented on your reel",
+        type: "comment",
+        reel: reelId,
+      });
+      const populatedNotification = await newNotification.populate(
+        "sender receiver reel",
+      );
+
+      const receiverSocketId = getSocketId(reel.author);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newNotification", populatedNotification);
+      }
+    }
+
     await reel.save();
     await reel.populate("author", "name userName profileImage");
     await reel.populate("comments.author", "name userName profileImage");
+
+    io.emit("CommentedOnReel", reel);
 
     return res
       .status(200)

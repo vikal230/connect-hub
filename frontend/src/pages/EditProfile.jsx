@@ -39,7 +39,7 @@ const EditProfile = () => {
         bio,
         file: backendImage,
       });
-      navigate(`/profile/${userData.userName}`);
+      navigate(`/profile/${data?.user?.userName || userName}`);
       return data;
     } catch (error) {
       console.log(error);

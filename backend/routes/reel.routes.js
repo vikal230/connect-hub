@@ -7,7 +7,7 @@ export const reelRouter = express.Router();
 
 reelRouter.post("/upload", isAuth, upload.single("media"),uploadReel);
 reelRouter.get("/like/:reelId", isAuth, like);
-reelRouter.get("getall", isAuth, getAllReels)
-reelRouter.post("/comments", isAuth, comments);
+reelRouter.get("/all-reels", isAuth, getAllReels)
+reelRouter.post("/comments/:reelId", isAuth, comments);
 
 

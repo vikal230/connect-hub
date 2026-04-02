@@ -59,7 +59,7 @@ const SignUp = () => {
           >
             <label
               htmlFor="name"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.name ? "top-[-15px]" : ""}`}
+              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.name ? "top-[-20px]" : ""}`}
             >
               Enter Your Name
             </label>
@@ -79,7 +79,7 @@ const SignUp = () => {
           >
             <label
               htmlFor="userName"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.userName ? "top-[-15px]" : ""}`}
+              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.userName ? "top-[-20px]" : ""}`}
             >
               Enter Your userName
             </label>
@@ -99,7 +99,7 @@ const SignUp = () => {
           >
             <label
               htmlFor="email"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.email ? "top-[-15px]" : ""}`}
+              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.email ? "top-[-20px]" : ""}`}
             >
               Enter Your Email
             </label>
@@ -119,7 +119,7 @@ const SignUp = () => {
           >
             <label
               htmlFor="password"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.password ? "top-[-15px]" : ""}`}
+              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.password ? "top-[-20px]" : ""}`}
             >
               Enter password
             </label>

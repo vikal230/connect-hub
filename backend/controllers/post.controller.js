@@ -2,6 +2,10 @@ import { uploadCloudinary } from "../config/cloudinary.js";
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 import fs from "fs";
+import { io } from "../socket.js";
+import Notification from "../models/notification.model.js";
+import { getSocketId } from "../socket.js";
+
 // export const uploadPost = async (req, res) => {
 //   try {
 //     const { caption, mediaType } = req.body;
@@ -154,10 +158,9 @@ export const uploadPost = async (req, res) => {
 
 export const getAllPost = async (req, res) => {
   try {
-    const posts = await Post.find({}).populate(
-      "author",
-      "name userName profileImage",
-    );
+    const posts = await Post.find({})
+      .populate("author", "name userName profileImage")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,
@@ -175,6 +178,7 @@ export const getAllPost = async (req, res) => {
 export const like = async (req, res) => {
   try {
     const postId = req.params.postId;
+    const senderId = req.userId;
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -184,15 +188,41 @@ export const like = async (req, res) => {
       });
     }
 
-    const isLiked = post.likes.includes(req.userId);
+    // const isLiked = post.likes.includes(req.userId);
+    const isLiked = post.likes.includes(senderId);
 
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
       isLiked
         ? { $pull: { likes: req.userId } }
         : { $addToSet: { likes: req.userId } },
-      { new: true },
-    ).populate("author", "name userName profileImage");
+      { returnDocument: "after" },
+    )
+      .populate("author", "name userName profileImage")
+      .populate("comments.author", "name userName profileImage");
+
+    if (!isLiked && post.author.toString() !== senderId.toString()) {
+      const newNotification = await Notification.create({
+        sender: senderId,
+        receiver: post.author,
+        message: "liked your post",
+        type: "like",
+        post: postId,
+      });
+
+      // Populate sender info to show in notification
+      const populatedNotif = await newNotification.populate(
+        "sender receiver post",
+      );
+
+      // Socket Emit to specific receiver
+      const receiverSocketId = getSocketId(post.author);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newNotification", populatedNotif);
+      }
+    }
+
+    io.emit("likedPost", updatedPost);
 
     return res.status(200).json({
       success: true,
@@ -213,6 +243,7 @@ export const comments = async (req, res) => {
   try {
     const { message } = req.body;
     const postId = req.params.postId;
+    const senderId = req.userId;
 
     const post = await Post.findById(postId);
 
@@ -228,11 +259,29 @@ export const comments = async (req, res) => {
       message,
     });
 
+    if (senderId.toString() !== post.author.toString()) {
+      const newNotification = await Notification.create({
+        sender: senderId,
+        receiver: post.author,
+        message: "commented on your post",
+        type: "comment",
+        post: postId,
+      });
+      const populatedNotification = await newNotification.populate(
+        "sender receiver post",
+      );
+      const receiverSocketId = getSocketId(post.author);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newNotification", populatedNotification);
+      }
+    }
+
     await post.save();
 
     await post.populate("author", "name userName profileImage");
     await post.populate("comments.author", "name userName profileImage");
 
+    io.emit("CommentedPost", post);
     return res.status(200).json({
       success: true,
       message: "Comment added successfully!",
@@ -244,33 +293,6 @@ export const comments = async (req, res) => {
     });
   }
 };
-
-// export const saved = async (req, res) => {
-//   try {
-//     const postId = req.params.postId
-//     const user = await User.findById(req.userId)
-
-//     const alreadySaved = user.saved.some(id=> id.toString() == postId.toString())
-
-//     if (alreadySaved) {
-//       user.saved = user.saved.filter(id=>toString() != postId.toString())
-//     }  else {
-//       user.saved.push(postId)
-//     }
-
-//     await user.save()
-//     populate("saved")
-//     return res.status(200).json({
-//       success: true,
-//       message: "post saved successfully!"
-//     })
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message:`post saved error: ${error}`
-//     })
-//   }
-// }
 
 export const saved = async (req, res) => {
   try {

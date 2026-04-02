@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { GoPlus } from "react-icons/go";
 import VideoPlayer from "../components/VideoPlayer";
 import { usePostStoryReelHook } from "../hooks/usePostStoryReelHook";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 
 const Upload = () => {
@@ -19,9 +19,9 @@ const Upload = () => {
   const { handleUploadPost, handleUploadStory, handleUploadReel } =
     usePostStoryReelHook();
 
-  const { postData } = useSelector((state) => state.post);
-  const { storyData } = useSelector((state) => state.story);
-  const { reelData } = useSelector((state) => state.reel);
+  // const { postData } = useSelector((state) => state.post);
+  // const { storyData } = useSelector((state) => state.story);
+  // const { reelData } = useSelector((state) => state.reel);
 
   const handleUpload = async () => {
     setLoading(true);
@@ -96,7 +96,7 @@ const Upload = () => {
           onClick={() => mediaInput.current.click()}
         >
           <GoPlus className="text-white w-[25px] cursor-pointer h-[25px]" />
-          <input type="file" hidden ref={mediaInput} onChange={handleMedia} />
+          <input type="file" hidden ref={mediaInput} onChange={handleMedia} accept={uploadType == "Reel" ? "video/*" : ""}/>
           <div className="text-white text-[19px] font-semibold">
             Upload {uploadType}
           </div>

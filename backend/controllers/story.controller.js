@@ -47,7 +47,7 @@ export const UploadStory = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "story uploaded successfully!",
-      populatedStory,
+      story: populatedStory,
     });
   } catch (error) {
     return res.status(500).json({
@@ -106,9 +106,9 @@ export const getStoryByUserName = async (req, res) => {
       });
     }
 
-    const story = await Story.find({ author: user._id }).populate(
-      "viewers author",
-    );
+    const story = await Story.find({ author: user._id })
+  .populate("author", "name userName profileImage") 
+    .populate("viewers", "name userName profileImage");
     return res.status(200).json({
       success: true,
       message: "story get successfully!",
@@ -118,6 +118,28 @@ export const getStoryByUserName = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Get Story By UserName error ${error}`,
+    });
+  }
+};
+
+export const getAllStories = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.userId);
+    const followingIds = currentUser.following;
+
+    const stories = await Story.find({ author: { $in: followingIds } })
+      .populate("author", "name userName profileImage") 
+      .populate("viewers", "name userName profileImage")
+      .sort({ createdAt: -1 });
+    return res.status(200).json({
+      success: true,
+      message: "all stories fetched!",
+      stories,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `all stories fetching error`,
     });
   }
 };

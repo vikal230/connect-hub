@@ -5,8 +5,7 @@ import logo from "../assets/vite.svg";
 import { useAuth } from "../hooks/useAuth";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../redux/userSlice";
+
 const SignIn = () => {
   //! state
   const [inputClicked, setInputClicked] = useState({
@@ -19,7 +18,6 @@ const SignIn = () => {
   const [password, SetPassword] = useState("");
   const navigate = useNavigate();
   const [err, setError] = useState("");
-  const dispatch = useDispatch()
   //!destructurering
   const { handleSignIn } = useAuth();
   //! functions
@@ -28,8 +26,8 @@ const SignIn = () => {
     setloading(true);
     setError("");
     try {
-      const data = await handleSignIn({ userName, password });
-       dispatch(setUserData(data.user))
+      await handleSignIn({ userName, password });
+      navigate("/");
     } catch (error) {
       console.log(error);
       setError(error.response?.data?.message);

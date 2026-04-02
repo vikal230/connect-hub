@@ -19,13 +19,13 @@ shadow-2xl shadow-[#000000] z-[100]"
         <IoMdHome className="text-white cursor-pointer w-[25px] h-[25px]" onClick={() => navigate("/")} />
       </div>
       <div>
-        <FaSearch className="text-white w-[25px] cursor-pointer h-[25px]" />
+        <FaSearch className="text-white w-[25px] cursor-pointer h-[25px]" onClick={()=> navigate("/search")}/>
       </div>
       <div>
         <GoPlus className="text-white w-[25px] cursor-pointer h-[25px]" onClick={() => navigate("/upload")}/>
       </div>
       <div>
-        <GoVideo className="text-white w-[25px] cursor-pointer h-[25px]" />
+        <GoVideo className="text-white w-[25px] cursor-pointer h-[25px]" onClick={() => navigate("/reels")}/>
       </div>
       <div className="w-[50px] h-[50px] ml-4 border-2 border-black rounded-full cursor-pointer overflow-hidden">
         <img
