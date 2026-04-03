@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
 import logo from "../assets/vite.svg";
-// import { handleSignup } from "../hooks/useAuth";
 import { useAuth } from "../hooks/useAuth";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,6 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 
 const SignUp = () => {
-  //! state
   const [inputClicked, setInputClicked] = useState({
     name: false,
     email: false,
@@ -25,17 +23,17 @@ const SignUp = () => {
   const [password, SetPassword] = useState("");
   const [err, setError] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  //!destructurering
+  const dispatch = useDispatch();
+  
   const { handleSignup } = useAuth();
-  //! functions
+  
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
     setloading(true);
     setError("");
     try {
       const data = await handleSignup({ name, userName, email, password });
-      dispatch(setUserData(data.user))
+      dispatch(setUserData(data.user));
     } catch (error) {
       setError(error.response?.data?.message);
       console.log(error);
@@ -43,30 +41,32 @@ const SignUp = () => {
       setloading(false);
     }
   };
+
   return (
-    <div className="w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center">
-      <div className="w-[90%] lg:max-w-[60%] h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23]">
-        <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-[10px] gap-[20px]">
+    <div className="w-full h-screen bg-slate-50 flex flex-col justify-center items-center">
+      <div className="w-[90%] lg:max-w-[60%] h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden shadow-2xl shadow-slate-200">
+        <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-[10px] gap-[20px] overflow-y-auto">
+          
           <div className="flex gap-[10px] items-center text-[20px] font-semibold mt-[40px]">
-            <span className="bg-amber-200 text-gray-800 py-3 px-30 rounded-3xl shadow-md hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out">
-              Sign Up in <span className="text-amber-600 font-bold">HYPE</span>
+            <span className="bg-indigo-50 text-slate-700 py-3 px-20 rounded-3xl shadow-sm hover:shadow-md hover:scale-105 transition duration-300 ease-in-out whitespace-nowrap">
+              Sign Up in <span className="text-indigo-600 font-bold">HYPE</span>
             </span>
           </div>
 
           <div
-            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl mt-[30px] border-2 border-black"
+            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl mt-[30px] border-2 border-slate-200 focus-within:border-indigo-500 transition-colors"
             onClick={() => setInputClicked({ ...inputClicked, name: true })}
           >
             <label
               htmlFor="name"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.name ? "top-[-20px]" : ""}`}
+              className={`text-slate-500 absolute left-[20px] p-[5px] bg-white text-[15px] transition-all ${inputClicked.name || name ? "top-[-20px] text-indigo-600 font-medium" : ""}`}
             >
               Enter Your Name
             </label>
             <input
               type="text"
               id="name"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
+              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent"
               onChange={(e) => setName(e.target.value)}
               value={name}
               required
@@ -74,19 +74,19 @@ const SignUp = () => {
           </div>
 
           <div
-            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-black"
+            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-slate-200 focus-within:border-indigo-500 transition-colors"
             onClick={() => setInputClicked({ ...inputClicked, userName: true })}
           >
             <label
               htmlFor="userName"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.userName ? "top-[-20px]" : ""}`}
+              className={`text-slate-500 absolute left-[20px] p-[5px] bg-white text-[15px] transition-all ${inputClicked.userName || userName ? "top-[-20px] text-indigo-600 font-medium" : ""}`}
             >
               Enter Your userName
             </label>
             <input
               type="text"
               id="userName"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
+              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent"
               onChange={(e) => setUserName(e.target.value)}
               value={userName}
               required
@@ -94,19 +94,19 @@ const SignUp = () => {
           </div>
 
           <div
-            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-black"
+            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-slate-200 focus-within:border-indigo-500 transition-colors"
             onClick={() => setInputClicked({ ...inputClicked, email: true })}
           >
             <label
               htmlFor="email"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.email ? "top-[-20px]" : ""}`}
+              className={`text-slate-500 absolute left-[20px] p-[5px] bg-white text-[15px] transition-all ${inputClicked.email || email ? "top-[-20px] text-indigo-600 font-medium" : ""}`}
             >
               Enter Your Email
             </label>
             <input
               type="email"
               id="email"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
+              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               required
@@ -114,12 +114,12 @@ const SignUp = () => {
           </div>
 
           <div
-            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-black"
+            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-slate-200 focus-within:border-indigo-500 transition-colors"
             onClick={() => setInputClicked({ ...inputClicked, password: true })}
           >
             <label
               htmlFor="password"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.password ? "top-[-20px]" : ""}`}
+              className={`text-slate-500 absolute left-[20px] p-[5px] bg-white text-[15px] transition-all ${inputClicked.password || password ? "top-[-20px] text-indigo-600 font-medium" : ""}`}
             >
               Enter password
             </label>
@@ -127,41 +127,42 @@ const SignUp = () => {
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
+              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent"
               onChange={(e) => SetPassword(e.target.value)}
               value={password}
               required
             />
             {!showPassword ? (
               <IoIosEye
-                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px]"
+                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px] text-slate-400 hover:text-indigo-600"
                 onClick={() => setShowPassword(true)}
               />
             ) : (
               <IoIosEyeOff
-                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px]"
+                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px] text-slate-400 hover:text-indigo-600"
                 onClick={() => setShowPassword(false)}
               />
             )}
           </div>
-          {err && <p className="text-red-600">{err}</p>}
+          
+          {err && <p className="text-red-500 text-sm">{err}</p>}
+          
           <button
-            className={`w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px] rounded-2xl mt-[30px] flex justify-center items-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
+            className={`w-[70%] px-[20px] py-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-[50px] rounded-2xl mt-[20px] flex justify-center items-center gap-2 transition-colors ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer shadow-lg shadow-indigo-200"}`}
             onClick={handleSubmitSignUp}
             disabled={loading}
           >
             {loading ? (
-              <>
-                <ClipLoader size={30} color="white" />
-              </>
+              <ClipLoader size={25} color="white" />
             ) : (
               "Sign Up"
             )}
           </button>
-          <p className="text-gray-800 cursor-pointer">
+          
+          <p className="text-slate-600 cursor-pointer mt-2 pb-5">
             Create Account ?{" "}
             <span
-              className="border-b-2 pb-[2px] border-b-black text-black"
+              className="text-indigo-600 font-semibold hover:underline"
               onClick={() => navigate("/signin")}
             >
               Sign In
@@ -169,9 +170,9 @@ const SignUp = () => {
           </p>
         </div>
 
-        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black">
-          <img src={logo} alt="vite image" />
-          <p>its a vibe coding way</p>
+        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-gradient-to-br from-indigo-600 to-violet-700 flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px]">
+          <img src={logo} alt="vite image" className="drop-shadow-xl" />
+          <p className="tracking-wide text-indigo-100">its a vibe coding way</p>
         </div>
       </div>
     </div>

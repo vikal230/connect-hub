@@ -4,38 +4,43 @@ import { useNavigate } from "react-router-dom";
 import FollowButton from "./FollowButton";
 
 const OtherUser = ({ user }) => {
-  const navigate = useNavigate()
-    // console.log("suggested user", user.userName, user._id);
+  const navigate = useNavigate();
+
   return (
-    <div
-      className="w-full h-[80px] flex items-center
-justify-between border-b-2 border-gray-800"
-    >
-      <div className="flex items-center gap-[10px]">
+    <div className="w-full flex items-center justify-between py-3 group transition-all duration-300">
+      {/* User Info Section */}
+      <div className="flex items-center gap-3">
+        {/* Profile Image */}
         <div
-          className="w-[40px] h-[40px] border-2 border-black
-    rounded-full cursor-pointer overflow-hidden"
-    onClick={() => navigate(`/profile/${user.userName}`)}
+          className="w-11 h-11 rounded-full p-[2px] bg-zinc-800 group-hover:bg-sky-500 transition-colors cursor-pointer overflow-hidden shadow-lg"
+          onClick={() => navigate(`/profile/${user.userName}`)}
         >
           <img
             src={user.profileImage || dp}
-            alt=""
-            className="w-full object-cover"
+            alt={user.userName}
+            className="w-full h-full object-cover rounded-full border-2 border-[#0b0b0b]"
           />
         </div>
-        <div>
-          <div className="text-[15px] text-white font-semibold ">
+
+        {/* Text Details */}
+        <div className="flex flex-col">
+          <div 
+            className="text-[14px] text-zinc-100 font-bold tracking-tight cursor-pointer hover:text-sky-400 transition-colors"
+            onClick={() => navigate(`/profile/${user.userName}`)}
+          >
             {user.userName}
           </div>
-          <div
-            className="text-[12px] text-gray-400 font-semibold
-        "
-          >
+          <div className="text-[11px] text-zinc-500 font-bold uppercase tracking-tighter">
             {user.name}
           </div>
         </div>
       </div>
-    <FollowButton tailwind={"px-[10px] w-[100px] py-[5px] h-[40px] bg-[blue] rounded-2xl text-white"} targetUserId={user._id}/>
+
+      {/* Action Button */}
+      <FollowButton 
+        tailwind="px-4 h-[34px] bg-zinc-100 text-black text-[12px] font-black rounded-full hover:bg-white active:scale-95 transition-all shadow-md" 
+        targetUserId={user._id}
+      />
     </div>
   );
 };

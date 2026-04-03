@@ -18,39 +18,33 @@ const Feed = () => {
   const { notificationData } = useSelector((state) => state.notification);
 
   const navigation = useNavigate();
-  // console.log("story list in feed", storyList);
 
   const handleNotificationClick = async () => {
     markAllUnreadAsRead();
-    navigation("/notificationpage")
-    console.log("notification clicked");
+    navigation("/notificationpage");
   };
+
   return (
-    <div className="lg:w-[50%] w-full bg-black min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto">
-      <div className="w-full h-[100px] flex items-center justify-between p-[20px] lg:hidden">
-        <img
-          src={logo}
-          alt="vite logo bad me change hoga!"
-          className="w-[40px]"
-        />
-        <div className="items-center flex gap-[10px]">
-          <div className="relative">
-            <GoHeart
-              className="text-white w-[25px] h-[25px]"
-              onClick={handleNotificationClick}
-            />
-            {notificationData?.length > 0 &&
-              notificationData.some((noti) => noti.isRead === false) && (
-                <div className="w-[10px] h-[10px] bg-blue-600 rounded-full absolute top-0 right-0"></div>
-              )}
+    <div className="lg:w-[50%] w-full bg-[#000] min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto no-scrollbar">
+      {/* Mobile Header */}
+      <div className="w-full h-[70px] flex items-center justify-between px-6 lg:hidden bg-black/80 backdrop-blur-md sticky top-0 z-50">
+        <img src={logo} alt="logo" className="w-[30px]" />
+        <div className="items-center flex gap-5">
+          <div className="relative cursor-pointer" onClick={handleNotificationClick}>
+            <GoHeart className="text-white w-6 h-6" />
+            {notificationData?.some((noti) => !noti.isRead) && (
+              <div className="w-2 h-2 bg-sky-500 rounded-full absolute top-0 right-0 border border-black shadow-lg"></div>
+            )}
           </div>
           <FiMessageCircle
-            className="text-white w-[25px] h-[25px]"
+            className="text-white w-6 h-6"
             onClick={() => navigation("/messages")}
           />
         </div>
       </div>
-      <div className="flex w-full overflow-auto gap-[10px] items-center p-[20px]">
+
+      {/* Stories */}
+      <div className="flex w-full overflow-x-auto no-scrollbar gap-4 items-center px-6 py-6 bg-black">
         <StoryDp
           userName={"Your Story"}
           profileImage={userData?.profileImage}
@@ -66,16 +60,17 @@ const Feed = () => {
         ))}
       </div>
 
-      <div
-        className="w-full min-h-[100vh] flex flex-col items-center
-gap-[20px] p-[10px] pt-[40px] bg-white rounded-t-[60px] relative
-pb-[120px]"
-      >
-        <Nav />
+      {/* Main Posts Container */}
+      <div className="w-full min-h-[100vh] flex flex-col items-center gap-6 p-4 pt-10 bg-[#fafafa] rounded-t-[45px] shadow-[0_-15px_40px_rgba(255,255,255,0.03)] relative pb-[120px]">
+        <div className="sticky top-4 z-40 w-full flex justify-center">
+            <Nav />
+        </div>
 
-        {postData?.map((post, index) => (
-          <Post key={post?._id || index} index={index} postData={post} />
-        ))}
+        <div className="w-full max-w-[500px] flex flex-col gap-10">
+            {postData?.map((post, index) => (
+              <Post key={post?._id || index} index={index} postData={post} />
+            ))}
+        </div>
       </div>
     </div>
   );

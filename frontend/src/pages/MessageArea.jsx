@@ -1,16 +1,13 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import dp from "../assets/dp.png";
 import { IoImages } from "react-icons/io5";
 import { IoMdSend } from "react-icons/io";
-import { useState } from "react";
-import { useRef } from "react";
 import { useMessageHooks } from "../hooks/useMessageHooks";
 import SenderMessage from "../components/SenderMessage";
 import RecieverMessage from "../components/ReceiverMessage";
-import { useDispatch } from "react-redux";
 import { setMessages } from "../redux/messageSlice";
 
 const MessageArea = () => {
@@ -24,10 +21,13 @@ const MessageArea = () => {
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
   const { sendMessageApiHook, getAllMessagesApiHook } = useMessageHooks();
+
   const handleImage = (e) => {
     const file = e.target.files[0];
-    setBackendImage(file);
-    setFrontendImage(URL.createObjectURL(file));
+    if (file) {
+      setBackendImage(file);
+      setFrontendImage(URL.createObjectURL(file));
+    }
   };
 
   const handleSendMessageHooks = async (e) => {
@@ -36,126 +36,98 @@ const MessageArea = () => {
     formData.append("message", inputMessage);
     formData.append("image", backendImage);
     try {
-      const data = await sendMessageApiHook({
-        receiverId: selectedUser._id,
-        formData,
-      });
-      console.log(data);
+      await sendMessageApiHook({ receiverId: selectedUser._id, formData });
       setInputMessage("");
       setFrontendImage(null);
       setBackendImage(null);
     } catch (error) {
       console.log(error);
-      throw error;
     }
   };
 
   const handleGetAllMessagesHooks = async () => {
     try {
-      const data = await getAllMessagesApiHook(selectedUser._id);
-      console.log(data);
+      await getAllMessagesApiHook(selectedUser._id);
     } catch (error) {
       console.log(error);
-      throw error;
     }
   };
 
   useEffect(() => {
-    if (selectedUser?._id) {
-      handleGetAllMessagesHooks();
-    }
+    if (selectedUser?._id) handleGetAllMessagesHooks();
   }, [selectedUser?._id]);
 
   useEffect(() => {
-    if (!socket || !selectedUser?._id) {
-      return;
-    }
-
+    if (!socket || !selectedUser?._id) return;
     const handleNewMessage = (newMessage) => {
       const messageSenderId = newMessage?.sender?._id || newMessage?.sender;
       if (messageSenderId === selectedUser._id) {
         dispatch(setMessages([...messages, newMessage]));
       }
     };
-
     socket.on("newMessage", handleNewMessage);
-
-    return () => {
-      socket.off("newMessage", handleNewMessage);
-    };
+    return () => socket.off("newMessage", handleNewMessage);
   }, [socket, selectedUser?._id, messages, dispatch]);
 
   return (
-    <div className="w-full h-[100vh] bg-black relative text-white">
-      <div className="flex items-center px-[20px] py-[10px] fixed top-0 z-[100] bg-black w-full">
-        <div className="h-[80px] flex items-center gap-[10px] px-[20px]">
-          <MdOutlineKeyboardBackspace
-            className="text-white cursor-pointer w-[25px] h-[25px] "
-            onClick={() => navigate("/profile/" + selectedUser?.userName)}
-          />
-        </div>
-        <div
-          className="w-[40px] h-[40px] border-2 border-black
-        rounded-full cursor-pointer overflow-hidden"
+    <div className="w-full h-screen bg-[#0b0b0b] relative flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="w-full h-[80px] flex items-center px-6 gap-4 sticky top-0 z-[100] bg-[#0b0b0b]/80 backdrop-blur-md border-b border-zinc-900">
+        <MdOutlineKeyboardBackspace
+          className="text-white cursor-pointer w-7 h-7 hover:text-zinc-400 transition-colors"
+          onClick={() => navigate("/profile/" + selectedUser?.userName)}
+        />
+        <div 
+          className="w-11 h-11 rounded-full border-2 border-zinc-800 overflow-hidden cursor-pointer active:scale-90 transition-transform"
           onClick={() => navigate(`/profile/${selectedUser.userName}`)}
         >
-          <img
-            src={selectedUser.profileImage || dp}
-            alt=""
-            className="w-full object-cover"
-          />
+          <img src={selectedUser.profileImage || dp} alt="" className="w-full h-full object-cover" />
         </div>
-        <div className="text-white text-[18px] font-semibold">
-          <div>{selectedUser.userName}</div>
-          <div className="text-[14px] text-gray-400">{selectedUser.name}</div>
+        <div className="flex flex-col">
+          <h2 className="text-zinc-100 text-[16px] font-bold tracking-tight">{selectedUser.userName}</h2>
+          <span className="text-[12px] text-gray-600 font-medium">{selectedUser.name}</span>
         </div>
       </div>
 
-      <div className="w-full h-[80%] pt-[100px] pb-[120px] lg:pb-[150px] px-[40px] flex flex-col gap-[50px] overflow-auto bg-black">
-{/* Messages will be displayed here */}
-{messages && messages.map((mess, index) =>(
-    (mess?.sender?._id || mess?.sender) === userData?._id ? <SenderMessage message={mess} key={index}/>: <RecieverMessage message={mess} key={index}/>
-))}
-
+      {/* Messages Area */}
+      <div className="flex-1 w-full pt-6 pb-[100px] px-6 flex flex-col gap-8 overflow-y-auto no-scrollbar bg-[#0b0b0b]">
+        {messages && messages.map((mess, index) => (
+          (mess?.sender?._id || mess?.sender) === userData?._id 
+            ? <SenderMessage message={mess} key={index}/>
+            : <RecieverMessage message={mess} key={index}/>
+        ))}
       </div>
 
-      <div className="w-full h-[80px] fixed bottom-0 flex justify-center items-center bg-black z-[100]">
+      {/* Input Section */}
+      <div className="w-full h-[90px] fixed bottom-0 flex justify-center items-center bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b] to-transparent px-4">
         <form
-          className="w-[90%] max-w-[800px] h-[80%] rounded-full bg-[#131616] flex items-center gap-[10px] px-[20px] relative"
+          className="w-full max-w-[800px] h-[55px] rounded-[24px] bg-zinc-900/90 border border-zinc-800 flex items-center gap-3 px-4 relative backdrop-blur-sm"
           onSubmit={handleSendMessageHooks}
         >
           {frontendImage && (
-            <div className="w-[100px] rounded-2xl h-[100px] absolute top-[-120px] right-[10px] overflow-hidden">
-              <img
-                src={frontendImage}
-                alt=""
-                className="h-full w-full object-cover"
-              />
+            <div className="w-[120px] h-[120px] absolute top-[-140px] right-4 rounded-2xl overflow-hidden border-2 border-sky-500 shadow-2xl animate-in fade-in zoom-in">
+              <img src={frontendImage} alt="" className="h-full w-full object-cover" />
+              <div className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 cursor-pointer" onClick={() => setFrontendImage(null)}>✕</div>
             </div>
           )}
-          <input
-            type="file"
-            accept="image/*"
-            ref={imageInput}
-            hidden
-            onChange={handleImage}
-          />
+          
+          <input type="file" accept="image/*" ref={imageInput} hidden onChange={handleImage} />
+          
+          <div className="p-2 hover:bg-zinc-800 rounded-full transition-colors cursor-pointer" onClick={() => imageInput.current.click()}>
+            <IoImages className="h-6 w-6 text-zinc-400" />
+          </div>
+
           <input
             type="text"
-            placeholder="Write Message"
-            className="w-full h-full px-[20px] text-[18px] text-white outline-0"
+            placeholder="Type a message..."
+            className="flex-1 h-full bg-transparent text-[15px] text-white outline-none placeholder:text-zinc-600"
             onChange={(e) => setInputMessage(e.target.value)}
             value={inputMessage}
           />
-          <div className="cursor-pointer">
-            <IoImages
-              className="h-[28px] w-[28px] text-white"
-              onClick={() => imageInput.current.click()}
-            />
-          </div>
+
           {(inputMessage || frontendImage) && (
-            <button className="w-[60px] h-[40px] rounded-full bg-gradient-to-br from-[#9500ff] to-[#ff0095] flex items-center justify-center cursor-pointer">
-              <IoMdSend className="w-[25px] h-[25px] text-white" />
+            <button className="w-10 h-10 rounded-xl bg-sky-500 hover:bg-sky-400 flex items-center justify-center cursor-pointer transition-all active:scale-90 shadow-lg shadow-sky-500/20">
+              <IoMdSend className="w-5 h-5 text-white" />
             </button>
           )}
         </form>

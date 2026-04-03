@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import logo from "../assets/react.svg";
 import { GoHeart } from "react-icons/go";
 import dp from "../assets/dp.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useAuth } from "../hooks/useAuth";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../redux/userSlice";
-import { setsuggestedUsers } from "../redux/userSlice";
+import { setUserData, setsuggestedUsers } from "../redux/userSlice";
 import OtherUser from "./OtherUser";
 import { useNavigate } from "react-router-dom";
 import NotificationPage from "../pages/NotificationPage";
@@ -39,69 +37,74 @@ const LeftHome = () => {
 
   return (
     <div
-      className={`w-[25%] hidden lg:block h-[100vh] bg-[black] border-r-2 border-gray-900 overflow-auto ${showNotification ? "overflow-hidden" : "overflow-auto"}`}
+      className={`w-[25%] hidden lg:block h-[100vh] bg-[#0b0b0b] border-r border-zinc-800 overflow-auto ${
+        showNotification ? "overflow-hidden" : "overflow-auto"
+      }`}
     >
-      <div className="w-full h-[100px] flex items-center justify-between p-[20px]">
+      <div className="w-full h-[80px] flex items-center justify-between px-6">
         <img
           src={logo}
-          alt="vite logo bad me change hoga!"
-          className="w-[40px]"
+          alt="logo"
+          className="w-[35px] hover:scale-110 transition-transform cursor-pointer"
+          onClick={() => navigate("/")}
         />
-        <div className="relative z-[100]" onClick={handleNotificationClick}>
-          <GoHeart className="text-white w-[25px] h-[25px]" />
+        <div className="relative z-[100] cursor-pointer p-2 hover:bg-zinc-900 rounded-full transition-all" onClick={handleNotificationClick}>
+          <GoHeart className="text-white w-[26px] h-[26px]" />
           {notificationData?.length > 0 &&
             notificationData.some((noti) => noti.isRead === false) && (
-              <div className="w-[10px] h-[10px] bg-blue-600 rounded-full absolute top-0 right-0"></div>
+              <div className="w-[8px] h-[8px] bg-sky-500 rounded-full absolute top-2 right-2 border-2 border-[#0b0b0b]"></div>
             )}
         </div>
       </div>
 
       {!showNotification && (
         <>
-          <div className="flex items-center w-full justify-between gap-[10px] px-[10px] border-b-2 border-b-gray-900 py-[10px]">
-            <div className="flex items-center gap-[10px]">
-              <div className="w-[50px] h-[50px] ml-4 border-2 border-black rounded-full cursor-pointer overflow-hidden">
+          <div className="flex items-center w-full justify-between gap-[10px] px-6 py-6 border-b border-zinc-900 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full ring-2 ring-zinc-800 p-[2px] cursor-pointer overflow-hidden">
                 <img
                   src={userData?.profileImage || dp}
-                  alt=""
-                  className="w-full h-full object-cover"
+                  alt="user"
+                  className="w-full h-full object-cover rounded-full"
                 />
               </div>
               <div>
-                <div className="text-[18px] text-white font-semibold">
+                <div className="text-[15px] text-zinc-100 font-bold tracking-tight leading-tight">
                   {userData.userName}
                 </div>
-                <div className="text-[15px] text-gray-400 font-semibold">
+                <div className="text-[13px] text-zinc-500 font-medium">
                   {userData.name}
                 </div>
               </div>
             </div>
             <div
-              className="text-blue-500 cursor-pointer font-semibold"
+              className="text-sky-500 hover:text-sky-400 text-[13px] cursor-pointer font-bold transition-colors"
               onClick={handleLogOutUser}
             >
               Log Out
             </div>
           </div>
 
-          <div className="w-full flex flex-col gap-[20px] p-[20px]">
-            <h1 className="text-[white] text-[19px]">Suggested User</h1>
-            {suggestedUsers &&
-              suggestedUsers
-                .slice(0, 5)
-                .map((user, index) => (
-                  <OtherUser
-                    key={user._id || index}
-                    index={index}
-                    user={user}
-                  />
-                ))}
+          <div className="w-full flex flex-col gap-4 px-6">
+            <h1 className="text-zinc-400 text-[13px] font-bold uppercase tracking-wider">Suggested for you</h1>
+            <div className="flex flex-col gap-1">
+                {suggestedUsers &&
+                suggestedUsers
+                    .slice(0, 5)
+                    .map((user, index) => (
+                    <OtherUser
+                        key={user._id || index}
+                        index={index}
+                        user={user}
+                    />
+                    ))}
+            </div>
           </div>
         </>
       )}
 
       {showNotification && (
-        <div>
+        <div className="animate-in slide-in-from-left duration-300">
           <NotificationPage />
         </div>
       )}

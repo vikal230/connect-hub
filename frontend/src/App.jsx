@@ -47,6 +47,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (!userData) {
+      return;
+    }
+
     handleSuggestedUser();
     handleFetchedAllpost();
     handleGetAllReels();
@@ -131,7 +135,7 @@ const App = () => {
           path="/profile/:userName"
           element={userData ? <Profile /> : <Navigate to={"/signin"} />}
         />
-
+      
         <Route
           path="/notificationpage"
           element={

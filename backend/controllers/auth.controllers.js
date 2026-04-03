@@ -1,7 +1,9 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { gentoken } from "../config/token.js";
-import { sendMail, sendVerifyMail } from "../config/Mail.js";
+import { sendMail } from "../config/Mail.js";
+import crypto from "crypto";
+
 /**
  * @route POST /api/auth/signup
  * @description Register a new user with name, username, email and password
@@ -50,7 +52,6 @@ export const signup = async (req, res) => {
     });
 
     const token = await gentoken(user._id);
-
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
@@ -70,6 +71,21 @@ export const signup = async (req, res) => {
       message: "User created Successfully!",
       user: userResponse,
     });
+
+    // // Verify token
+    // const verifyToken = crypto.randomBytes(32).toString("hex");
+    // user.emailVerifyToken = verifyToken;
+    // user.emailVerifyExpire = Date.now() + 24 * 60 * 60 * 1000;
+    // await user.save();
+
+    // // Email
+    // const verifyLink = `http://localhost:5173/verify-email/${verifyToken}`;
+    // await sendVerifyMail(email, verifyLink);
+
+    // return res.status(201).json({
+    //   success: true,
+    //   message: "Account created! Please verify your email.",
+    // });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -168,7 +184,6 @@ export const signOut = async (req, res) => {
   }
 };
 
-
 /**
  * @description Generates a 4-digit OTP and sends it to the user's email.
  * @param {Object} req.body - Requires { email }
@@ -228,7 +243,7 @@ export const isVerify = async (req, res) => {
     if (user.otpExpire < Date.now()) {
       return res.status(400).json({
         success: false,
-        message: "OTP has expired. Please request a new one."
+        message: "OTP has expired. Please request a new one.",
       });
     }
 
@@ -283,3 +298,4 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+

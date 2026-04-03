@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { GoPlus } from "react-icons/go";
 import VideoPlayer from "../components/VideoPlayer";
 import { usePostStoryReelHook } from "../hooks/usePostStoryReelHook";
-// import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 
 const Upload = () => {
@@ -14,14 +13,10 @@ const Upload = () => {
   const [backendMedia, setBackendMedia] = useState(null);
   const [mediaType, setMediaType] = useState();
   const mediaInput = useRef();
-  const [caption, setCaption] = useState();
+  const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const { handleUploadPost, handleUploadStory, handleUploadReel } =
     usePostStoryReelHook();
-
-  // const { postData } = useSelector((state) => state.post);
-  // const { storyData } = useSelector((state) => state.story);
-  // const { reelData } = useSelector((state) => state.reel);
 
   const handleUpload = async () => {
     setLoading(true);
@@ -48,6 +43,7 @@ const Upload = () => {
 
   const handleMedia = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     if (file.type.includes("image")) {
       setMediaType("image");
     } else {
@@ -56,95 +52,107 @@ const Upload = () => {
     setBackendMedia(file);
     setFrontendMedia(URL.createObjectURL(file));
   };
+
   return (
-    <div className="w-full h-[100vh] bg-black flex flex-col items-center ">
-      <div className="w-full h-[80px]  flex items-center gap-[20px] px-[20px]">
+    <div className="w-full h-[100vh] bg-[#0b0b0b] flex flex-col items-center overflow-y-auto no-scrollbar">
+      {/* Header */}
+      <div className="w-full h-[80px] flex items-center gap-4 px-6 border-b border-zinc-900">
         <MdOutlineKeyboardBackspace
-          className="text-white cursor-pointer w-[25px] h-[25px] "
+          className="text-white cursor-pointer w-7 h-7 hover:text-zinc-400 transition-colors"
           onClick={() => navigate(`/`)}
         />
-        <h1 className="text-white text-[20px] font-semibold">Upload Media</h1>
+        <h1 className="text-white text-xl font-bold tracking-tight">Create New {uploadType}</h1>
       </div>
-      <div
-        className="w-[90%] max-w-[600px] h-[80px] bg-white rounded-full flex justify-around items-center gap-[10px]
-      "
-      >
-        <div
-          className={`${uploadType == "post" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl hover:shadow-black`}
-          onClick={() => setUploadType("post")}
-        >
-          Post
-        </div>
 
-        <div
-          className={`${uploadType == "Story" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl shadow-black`}
-          onClick={() => setUploadType("Story")}
-        >
-          Story
-        </div>
-
-        <div
-          className={`${uploadType == "Reel" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl hover:shadow-black`}
-          onClick={() => setUploadType("Reel")}
-        >
-          Reel
-        </div>
+      {/* Upload Type Selector */}
+      <div className="w-[90%] max-w-[500px] h-[65px] bg-zinc-900/50 p-1.5 rounded-3xl flex justify-between items-center mt-8 border border-zinc-800">
+        {["post", "Story", "Reel"].map((type) => (
+          <div
+            key={type}
+            className={`${
+              uploadType === type 
+                ? "bg-white text-black shadow-lg" 
+                : "text-zinc-400 hover:text-white"
+            } w-[32%] h-full flex justify-center items-center text-[15px] font-bold rounded-[22px] cursor-pointer transition-all duration-300`}
+            onClick={() => {
+              setUploadType(type);
+              setFrontendMedia(null);
+            }}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </div>
+        ))}
       </div>
+
+      {/* Media Selector Box */}
       {!frontendMedia && (
         <div
-          className="w-[80%] max-w-[500px] h-[250px] bg-[#0e1316] border-gray-800 border-2 flex flex-col items-center justify-center gap-[8px] mt-[15vh] rounded-2xl cursor-pointer hover:bg-[#353a3d]"
+          className="w-[90%] max-w-[500px] h-[300px] bg-zinc-900/30 border-zinc-800 border-2 border-dashed flex flex-col items-center justify-center gap-4 mt-12 rounded-[32px] cursor-pointer hover:bg-zinc-900/60 hover:border-zinc-700 transition-all group"
           onClick={() => mediaInput.current.click()}
         >
-          <GoPlus className="text-white w-[25px] cursor-pointer h-[25px]" />
-          <input type="file" hidden ref={mediaInput} onChange={handleMedia} accept={uploadType == "Reel" ? "video/*" : ""}/>
-          <div className="text-white text-[19px] font-semibold">
-            Upload {uploadType}
+          <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+            <GoPlus className="text-white w-8 h-8" />
           </div>
+          <input 
+            type="file" 
+            hidden 
+            ref={mediaInput} 
+            onChange={handleMedia} 
+            accept={uploadType === "Reel" ? "video/*" : "image/*,video/*"}
+          />
+          <div className="text-zinc-300 text-lg font-semibold tracking-tight">
+            Select from device
+          </div>
+          <p className="text-zinc-500 text-sm">Upload high quality {uploadType.toLowerCase()}s</p>
         </div>
       )}
 
+      {/* Preview Section */}
       {frontendMedia && (
-        <div className="w-[80%] max-w-[500px] h-[250px] flex flex-col items-center justify-center mt-[15vh]">
-          {mediaType == "image" && (
-            <div className="w-[80%] max-w-[500px] h-[250px] flex flex-col items-center justify-center mt-[5vh]">
-              <img src={frontendMedia} alt="" className="h-[60%] rounded-2xl" />
-              {uploadType != "Story" && (
-                <input
-                  type="text"
-                  className="w-full border-b-gray-400 border-b-2 outline-none px-[10px] py-[5px] text-white mt-[20px]"
-                  placeholder="write caption"
-                  onChange={(e) => setCaption(e.target.value)}
-                  value={caption}
-                />
-              )}
+        <div className="w-[90%] max-w-[500px] flex flex-col items-center justify-center mt-12 animate-in fade-in zoom-in duration-300">
+          <div className="w-full relative rounded-[32px] overflow-hidden border border-zinc-800 bg-black">
+            {mediaType === "image" ? (
+              <img src={frontendMedia} alt="preview" className="w-full h-auto max-h-[400px] object-contain mx-auto" />
+            ) : (
+              <div className="w-full aspect-video flex items-center justify-center">
+                <VideoPlayer media={frontendMedia} />
+              </div>
+            )}
+            
+            {/* Remove Media Button */}
+            <button 
+              onClick={() => setFrontendMedia(null)}
+              className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white p-2 rounded-full hover:bg-red-500 transition-colors"
+            >
+              <MdOutlineKeyboardBackspace className="rotate-90" />
+            </button>
+          </div>
+
+          {uploadType !== "Story" && (
+            <div className="w-full mt-6">
+              <textarea
+                className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl outline-none px-4 py-4 text-white placeholder-zinc-500 focus:border-sky-500 transition-colors resize-none"
+                placeholder="Write a caption..."
+                rows="3"
+                onChange={(e) => setCaption(e.target.value)}
+                value={caption}
+              />
             </div>
           )}
 
-          {mediaType == "video" && (
-            <div className="w-[80%] max-w-[500px] h-[250px] flex flex-col items-center justify-center mt-[5vh]">
-              <VideoPlayer media={frontendMedia} />
-              {uploadType != "Story" && (
-                <input
-                  type="text"
-                  className="w-full border-b-gray-400 border-b-2 outline-none px-[10px] py-[5px] text-white mt-[20px]"
-                  placeholder="write caption"
-                  onChange={(e) => setCaption(e.target.value)}
-                  value={caption}
-                />
-              )}
-            </div>
-          )}
+          {/* Action Button */}
+          <button
+            className={`w-full h-[55px] mt-8 mb-10 cursor-pointer rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2
+              ${loading 
+                ? "bg-zinc-800 text-zinc-500 cursor-not-allowed" 
+                : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"
+              }`}
+            onClick={handleUpload}
+            disabled={loading}
+          >
+            {loading ? <ClipLoader size={20} color="#000" /> : `Share ${uploadType}`}
+          </button>
         </div>
-      )}
-
-      {frontendMedia && (
-        <button
-          className="px-[10px] w-[60%] max-w-[400px] py-[5px] h-[50px] bg-[white] mt-[50px] cursor-pointer rounded-2xl "
-          onClick={handleUpload}
-          disabled={loading}
-        >
-          {loading ? <ClipLoader /> : `Upload ${uploadType}`}
-        </button>
       )}
     </div>
   );

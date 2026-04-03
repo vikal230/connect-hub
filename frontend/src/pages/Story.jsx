@@ -4,9 +4,8 @@ import { usePostStoryReelHook } from "../hooks/usePostStoryReelHook";
 import StoryCard from "../components/StoryCard";
 
 const Story = () => {
-   const { userName } = useParams();
+  const { userName } = useParams();
   const { handleStoryByUserName } = usePostStoryReelHook();
-// console.log("story route userName", userName);
 
   useEffect(() => {
     if (userName) {
@@ -14,18 +13,11 @@ const Story = () => {
     }
   }, [userName]);
 
-//   useEffect(() => {
-//   const fetchStory = async () => {
-//     if (userName) {
-//       await handleStoryByUserName(userName);
-//     }
-//   };
-//   fetchStory();
-// }, [userName]);
-
   return (
-  <div className="w-full h-[100vh] bg-black flex justify-center items-center"><StoryCard /></div>
-
-  )}
+    <div className="w-full h-screen bg-[#050505] flex justify-center items-center overflow-hidden">
+      <StoryCard />
+    </div>
+  );
+};
 
 export default Story;

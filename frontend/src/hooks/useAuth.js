@@ -96,15 +96,13 @@ export const useAuth = () => {
       return data;
     } catch (error) {
       console.log(error);
-        dispatch(setUserData(null));
-       dispatch(setLoading(false));
+      dispatch(setUserData(null));
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("token");
-
-      
         navigate("/signin");
       }
       throw error;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

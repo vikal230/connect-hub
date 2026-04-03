@@ -196,7 +196,8 @@ export const usePostStoryReelHook = () => {
       return result;
     } catch (error) {
       console.log(error);
-      throw error;
+      dispatch(setStoryList([]));
+      return null;
     }
   };
 
@@ -211,14 +212,15 @@ export const usePostStoryReelHook = () => {
   };
 
   const handleGetFollowingList = async () => {
+
     try {
       const result = await getFollowingListApi();
       // dispatch(setFollowing(result.following || []));
       // console.log(result.following || []);
-      return result.data;
+      return result;
     } catch (error) {
       console.log(error);
-      throw error;
+      return null;
     }
   };
   return {

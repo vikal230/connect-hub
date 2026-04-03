@@ -1,5 +1,5 @@
  import express from "express"
-import { isVerify, resetPassword, sendOtp, signIn, signOut, signup } from "../controllers/auth.controllers.js"
+import { isVerify, resetPassword, sendOtp, signIn, signOut, signup} from "../controllers/auth.controllers.js"
 
 export const authRoutes = express.Router()
 
@@ -9,4 +9,3 @@ export const authRoutes = express.Router()
  authRoutes.post("/sendotp", sendOtp)
  authRoutes.post("/isverify", isVerify)
  authRoutes.post("/resetpassword", resetPassword)
-

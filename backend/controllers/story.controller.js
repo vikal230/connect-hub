@@ -125,7 +125,14 @@ export const getStoryByUserName = async (req, res) => {
 export const getAllStories = async (req, res) => {
   try {
     const currentUser = await User.findById(req.userId);
-    const followingIds = currentUser.following;
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: "Current user not found",
+      });
+    }
+
+    const followingIds = currentUser.following || [];
 
     const stories = await Story.find({ author: { $in: followingIds } })
       .populate("author", "name userName profileImage") 
@@ -139,7 +146,7 @@ export const getAllStories = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `all stories fetching error`,
+      message: `all stories fetching error ${error.message}`,
     });
   }
 };

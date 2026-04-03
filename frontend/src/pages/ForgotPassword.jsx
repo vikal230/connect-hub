@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { useAuth } from "../hooks/useAuth";
+import { MdOutlineMailOutline, MdLockOutline, MdOutlineVpnKey } from "react-icons/md";
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
-  const [inputClicked, setInputClicked] = useState({
-    email: false,
-    otp: false,
-    newPassword: false,
-    consfirmNewPassword: false,
-  });
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,12 +18,10 @@ const ForgotPassword = () => {
     setLoading(true);
     setError("");
     try {
-      const data = await handleSendOtp({ email });
-      console.log(data);
+      await handleSendOtp({ email });
       setStep(2);
     } catch (error) {
-      console.log(error);
-       setError(error.response?.data?.message);
+      setError(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -37,14 +30,12 @@ const ForgotPassword = () => {
   const handleIsVerify2 = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("")
+    setError("");
     try {
-      const data = await handleIsVerify({ email, otp });
-      console.log(data);
+      await handleIsVerify({ email, otp });
       setStep(3);
     } catch (error) {
-      console.log(error);
-       setError(error.response?.data?.message);
+      setError(error.response?.data?.message || "Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -52,163 +43,150 @@ const ForgotPassword = () => {
 
   const handleResetPassword3 = async (e) => {
     e.preventDefault();
-    setError("")
+    setError("");
+    if (newPassword !== confirmNewPassword) {
+      return setError("Passwords do not match");
+    }
+    setLoading(true);
     try {
-      const data = await handleResetPassword({ email, password: newPassword });
-      if(newPassword !== confirmNewPassword){
-        return setError("Password Does Not Match")
-      }
-      setLoading(true);
-      console.log(data);
+      await handleResetPassword({ email, password: newPassword });
     } catch (error) {
-      console.log(error);
-       setError(error.response?.data?.message);
+      setError(error.response?.data?.message || "Failed to reset");
     } finally {
       setLoading(false);
     }
   };
 
+  // Common Card Classes for
+  const cardClasses = "w-[90%] max-w-[450px] bg-zinc-900/40 backdrop-blur-xl rounded-[35px] flex justify-center items-center flex-col border border-zinc-800 p-10 shadow-2xl animate-in fade-in zoom-in duration-500";
+  // Common Input Group Classes
+  const inputGroupClasses = "relative flex items-center justify-start w-full h-[55px] rounded-2xl border border-zinc-800 bg-zinc-900/50 group focus-within:border-zinc-500 transition-all";
+  // Common Input Classes
+  const inputClasses = "w-full h-full rounded-2xl px-5 pl-12 outline-none bg-transparent text-white font-medium placeholder:text-zinc-600";
+  // Common Icon Classes
+  const iconClasses = "absolute left-4 text-zinc-500 text-xl group-focus-within:text-white transition-colors";
+  // Common Label Classes
+  const labelClasses = "text-zinc-500 text-xs font-bold uppercase tracking-widest absolute -top-6 left-2";
+
   return (
-    <div className="w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center">
-      {step == 1 && (
-        <div className="w-[90%] max-w-[500px] h-[500px] bg-white rounded-2xl flex justify-center items-center flex-col border-[#1a1f23]">
-          <h2 className="text-[30px] font-semibold">Forgot Password</h2>
-          <div
-            className="relative flex items-center justify-start w-[90%] mt-[30px] h-[50px] rounded-2xl border-2 border-black"
-            onClick={() => setInputClicked({ ...inputClicked, email: true })}
-          >
-            <label
-              htmlFor="email"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.email ? "top-[-15px]" : ""}`}
-            >
-              Enter Your Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              required
-            />
-          </div>
-          {err && <p className="text-red-600">{err}</p>}
+    <div className="w-full h-screen bg-[#0b0b0b] flex flex-col justify-center items-center px-6">
+      
+      {step === 1 && (
+        <div className={cardClasses}>
+          <h2 className="text-3xl font-black text-white tracking-tighter mb-10">Forgot Password</h2>
+          
+          <div className="w-full flex flex-col gap-8">
+            <div className="relative w-full">
+              <label className={labelClasses}>Email Address</label>
+              <div className={inputGroupClasses}>
+                <MdOutlineMailOutline className={iconClasses} />
+                <input
+                  type="email"
+                  id="email"
+                  className={inputClasses}
+                  placeholder="name@example.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  required
+                />
+              </div>
+            </div>
 
-          <button
-            className={`w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px] rounded-2xl mt-[30px] flex justify-center items-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
-            disabled={loading}
-            onClick={handleSendOtpStep1}
-          >
-            {loading ? (
-              <>
-                <ClipLoader size={30} color="white" />
-              </>
-            ) : (
-              "Send Otp"
-            )}
-          </button>
+            {err && <p className="text-red-500 text-sm font-bold text-center animate-pulse">{err}</p>}
+
+            <button
+              className={`w-full h-[55px] font-bold rounded-2xl transition-all flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"}`}
+              disabled={loading}
+              onClick={handleSendOtpStep1}
+            >
+              {loading ? <ClipLoader size={24} color="black" /> : "Send OTP"}
+            </button>
+          </div>
         </div>
       )}
-      {step == 2 && (
-        <div className="w-[90%] max-w-[500px] h-[500px] bg-white rounded-2xl flex justify-center items-center flex-col border-[#1a1f23]">
-          <h2 className="text-[30px] font-semibold">Forgot Password</h2>
-          <div
-            className="relative flex items-center justify-start w-[90%] mt-[30px] h-[50px] rounded-2xl border-2 border-black"
-            onClick={() => setInputClicked({ ...inputClicked, otp: true })}
-          >
-            <label
-              htmlFor="otp"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.otp ? "top-[-20px]" : ""}`}
-            >
-              Enter Otp
-            </label>
-            <input
-              type="text"
-              id="otp"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
-              onChange={(e) => setOtp(e.target.value)}
-              value={otp}
-              required
-            />
-          </div>
-          {err && <p className="text-red-600">{err}</p>}
 
-          <button
-            className={`w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px] rounded-2xl mt-[30px] flex justify-center items-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
-            disabled={loading}
-            onClick={handleIsVerify2}
-          >
-            {loading ? (
-              <>
-                <ClipLoader size={30} color="white" />
-              </>
-            ) : (
-              "Submit"
-            )}
-          </button>
+      {step === 2 && (
+        <div className={cardClasses}>
+          <h2 className="text-3xl font-black text-white tracking-tighter mb-10">Verify OTP</h2>
+          
+          <div className="w-full flex flex-col gap-8">
+            <div className="relative w-full">
+              <label className={labelClasses}>Verification Code</label>
+              <div className={inputGroupClasses}>
+                <MdOutlineVpnKey className={iconClasses} />
+                <input
+                  type="text"
+                  id="otp"
+                  className={`${inputClasses} tracking-[10px] text-center pl-5 font-black placeholder:tracking-normal placeholder:font-medium`}
+                  placeholder="000000"
+                  onChange={(e) => setOtp(e.target.value)}
+                  value={otp}
+                  required
+                />
+              </div>
+            </div>
+
+            {err && <p className="text-red-500 text-sm font-bold text-center animate-pulse">{err}</p>}
+
+            <button
+              className={`w-full h-[55px] font-bold rounded-2xl transition-all flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"}`}
+              disabled={loading}
+              onClick={handleIsVerify2}
+            >
+              {loading ? <ClipLoader size={24} color="black" /> : "Verify & Proceed"}
+            </button>
+            <button onClick={() => setStep(1)} className="text-zinc-500 text-xs font-bold hover:text-white transition-colors -mt-4">Back to Email</button>
+          </div>
         </div>
       )}
-      {step == 3 && (
-        <div className="w-[90%] max-w-[500px] h-[500px] bg-white rounded-2xl flex justify-center items-center flex-col border-[#1a1f23]">
-          <h2 className="text-[30px] font-semibold">Reset Password</h2>
-          <div
-            className="relative flex items-center justify-start w-[90%] mt-[30px] h-[50px] rounded-2xl border-2 border-black"
-            onClick={() =>
-              setInputClicked({ ...inputClicked, newPassword: true })
-            }
-          >
-            <label
-              htmlFor="newPassword"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.newPassword ? "top-[-20px]" : ""}`}
-            >
-              Enter NewPassword
-            </label>
-            <input
-              type="text"
-              id="newpassword"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
-              onChange={(e) => setNewPassword(e.target.value)}
-              value={newPassword}
-              required
-            />
-          </div>
 
-          <div
-            className="relative flex items-center justify-start w-[90%] mt-[30px] h-[50px] rounded-2xl border-2 border-black"
-            onClick={() =>
-              setInputClicked({ ...inputClicked, confirmNewPassword: true })
-            }
-          >
-            <label
-              htmlFor="confirmNewPassword"
-              className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.confirmNewPassword ? "top-[-20px]" : ""}`}
-            >
-              Confirm Password
-            </label>
-            <input
-              type="text"
-              id="confirmNewPassword"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
-              onChange={(e) => setConfirmnewPassword(e.target.value)}
-              value={confirmNewPassword}
-              required
-            />
-          </div>
-          {err && <p className="text-red-600">{err}</p>}
+      {step === 3 && (
+        <div className={cardClasses}>
+          <h2 className="text-3xl font-black text-white tracking-tighter mb-10">New Password</h2>
+          
+          <div className="w-full flex flex-col gap-8">
+            <div className="relative w-full">
+              <label className={labelClasses}>New Password</label>
+              <div className={inputGroupClasses}>
+                <MdLockOutline className={iconClasses} />
+                <input
+                  type="password"
+                  id="newPassword"
+                  className={inputClasses}
+                  placeholder="••••••••"
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  value={newPassword}
+                  required
+                />
+              </div>
+            </div>
 
-          <button
-            className={`w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px] rounded-2xl mt-[30px] flex justify-center items-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
-            disabled={loading}
-            onClick={handleResetPassword3}
-          >
-            {loading ? (
-              <>
-                <ClipLoader size={30} color="white" />
-              </>
-            ) : (
-              "Reset Password"
-            )}
-          </button>
+            <div className="relative w-full">
+              <label className={labelClasses}>Confirm Password</label>
+              <div className={inputGroupClasses}>
+                <MdLockOutline className={iconClasses} />
+                <input
+                  type="password"
+                  id="confirmNewPassword"
+                  className={inputClasses}
+                  placeholder="••••••••"
+                  onChange={(e) => setConfirmnewPassword(e.target.value)}
+                  value={confirmNewPassword}
+                  required
+                />
+              </div>
+            </div>
+
+            {err && <p className="text-red-500 text-sm font-bold text-center animate-pulse">{err}</p>}
+
+            <button
+              className={`w-full h-[55px] font-bold rounded-2xl transition-all flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"}`}
+              disabled={loading}
+              onClick={handleResetPassword3}
+            >
+              {loading ? <ClipLoader size={24} color="black" /> : "Reset Password"}
+            </button>
+          </div>
         </div>
       )}
     </div>
