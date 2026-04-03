@@ -1,7 +1,11 @@
 
 import axios from "axios";
+
+const apiBaseUrl =
+  import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: apiBaseUrl,
   withCredentials: true,
 });
 
@@ -26,7 +30,10 @@ export const signup = async ({ name, userName, email, password }) => {
 
 export const signIn = async ({ userName, password }) => {
   try {
-    const response = await api.post("/api/auth/signin", { userName, password });
+    const response = await api.post("/api/auth/signin", {
+      userName: userName.trim(),
+      password,
+    });
     // console.log(response.data);
     return response.data;
   } catch (error) {

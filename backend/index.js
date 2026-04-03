@@ -13,18 +13,24 @@ import { app, server } from "./socket.js";
 
 dotenv.config();
 
+const allowedOrigins = [
+  process.env.FRONTEND_VERCEL_LINK,
+  process.env.FRONTEND_LOCAL_URL || "http://localhost:5173",
+].filter(Boolean);
+
+app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [process.env.FRONTEND_VERCEL_LINK,"http://localhost:5173"],
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
-app.get("/", (req, res) => {
-  res.send("hello");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello");
+// });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);

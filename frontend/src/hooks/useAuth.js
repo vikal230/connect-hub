@@ -95,11 +95,12 @@ export const useAuth = () => {
       dispatch(setCurentUserStory(data.user.story));
       return data;
     } catch (error) {
-      console.log(error);
       dispatch(setUserData(null));
       if (error.response && error.response.status === 401) {
         navigate("/signin");
+        return null;
       }
+      console.log(error);
       throw error;
     } finally {
       dispatch(setLoading(false));

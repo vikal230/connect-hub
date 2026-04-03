@@ -4,6 +4,18 @@ import { gentoken } from "../config/token.js";
 import { sendMail } from "../config/Mail.js";
 import crypto from "crypto";
 
+const getCookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+  };
+};
+
 /**
  * @route POST /api/auth/signup
  * @description Register a new user with name, username, email and password
@@ -18,6 +30,8 @@ import crypto from "crypto";
 export const signup = async (req, res) => {
   try {
     const { name, userName, email, password } = req.body;
+    const trimmedUserName = userName?.trim();
+    const trimmedEmail = email?.trim().toLowerCase();
 
     if (!password || password.length < 6) {
       return res.status(400).json({
@@ -26,7 +40,7 @@ export const signup = async (req, res) => {
       });
     }
 
-    const findByEmail = await User.findOne({ email });
+    const findByEmail = await User.findOne({ email: trimmedEmail });
     if (findByEmail) {
       return res.status(400).json({
         success: false,
@@ -34,7 +48,7 @@ export const signup = async (req, res) => {
       });
     }
 
-    const findByUsername = await User.findOne({ userName });
+    const findByUsername = await User.findOne({ userName: trimmedUserName });
     if (findByUsername) {
       return res.status(400).json({
         success: false,
@@ -46,18 +60,13 @@ export const signup = async (req, res) => {
 
     const user = await User.create({
       name,
-      email,
-      userName,
+      email: trimmedEmail,
+      userName: trimmedUserName,
       password: hashedPassword,
     });
 
     const token = await gentoken(user._id);
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: false,
-      sameSite: "strict",
-    });
+    res.cookie("token", token, getCookieOptions());
 
     const userResponse = {
       _id: user._id,
@@ -72,20 +81,7 @@ export const signup = async (req, res) => {
       user: userResponse,
     });
 
-    // // Verify token
-    // const verifyToken = crypto.randomBytes(32).toString("hex");
-    // user.emailVerifyToken = verifyToken;
-    // user.emailVerifyExpire = Date.now() + 24 * 60 * 60 * 1000;
-    // await user.save();
-
-    // // Email
-    // const verifyLink = `http://localhost:5173/verify-email/${verifyToken}`;
-    // await sendVerifyMail(email, verifyLink);
-
-    // return res.status(201).json({
-    //   success: true,
-    //   message: "Account created! Please verify your email.",
-    // });
+  
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -106,6 +102,7 @@ export const signup = async (req, res) => {
 export const signIn = async (req, res) => {
   try {
     const { userName, password } = req.body;
+    const loginId = userName?.trim();
 
     if (!password || password.length < 6) {
       return res.status(400).json({
@@ -114,7 +111,9 @@ export const signIn = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ userName });
+    const user = await User.findOne({
+      $or: [{ userName: loginId }, { email: loginId?.toLowerCase() }],
+    });
 
     if (!user) {
       return res.status(400).json({
@@ -134,12 +133,7 @@ export const signIn = async (req, res) => {
 
     const token = await gentoken(user._id);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: false,
-      sameSite: "strict",
-    });
+    res.cookie("token", token, getCookieOptions());
 
     const userResponse = {
       _id: user._id,
@@ -167,11 +161,7 @@ export const signIn = async (req, res) => {
  */
 export const signOut = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false,
-    });
+    res.clearCookie("token", getCookieOptions());
     return res.status(200).json({
       success: true,
       message: "user logout successfully",

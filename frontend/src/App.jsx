@@ -43,7 +43,7 @@ const App = () => {
   const { socket } = useSelector((state) => state.socket);
 
   useEffect(() => {
-    handleGetCurrentUser();
+    handleGetCurrentUser().catch(() => {});
   }, []);
 
   useEffect(() => {
