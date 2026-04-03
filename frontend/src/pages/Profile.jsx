@@ -8,7 +8,7 @@ import Nav from "../components/Nav";
 import { useNavigate } from "react-router-dom";
 import FollowButton from "../components/FollowButton";
 import Post from "../components/Post";
-import {usePostStoryReelHook} from "../hooks/usePostStoryReelHook"
+import { usePostStoryReelHook } from "../hooks/usePostStoryReelHook";
 import { setSelectedUser } from "../redux/messageSlice";
 
 const Profile = () => {
@@ -17,6 +17,7 @@ const Profile = () => {
   const { handleGetProfile, handleLogOut } = useAuth();
   const [postType, setPostType] = useState("posts");
   const { profileData, userData } = useSelector((state) => state.user);
+  console.log("profile data", profileData);
   const { postData } = useSelector((state) => state.post);
   const { handleFetchedAllpost } = usePostStoryReelHook();
   const navigate = useNavigate();
@@ -24,13 +25,11 @@ const Profile = () => {
   //   handleGetProfile(userName);
   // }, [userName]);
 
-
   useEffect(() => {
     handleGetProfile(userName);
     if (!postData || postData.length === 0) {
       handleFetchedAllpost();
     }
-
   }, [userName]);
 
   const refreshProfile = async () => {
@@ -47,10 +46,16 @@ const Profile = () => {
             onClick={() => navigate("/")}
           />
         </div>
-        <div className="font-semibold text-[20px]">{profileData?.userName}</div>
-        <div className="text-blue-700 cursor-pointer" onClick={handleLogOut}>
-          Log Out
+        <div className="font-semibold text-[20px] text-white">
+          {profileData?.userName}
         </div>
+        {profileData?._id === userData?._id ? (
+          <div className="text-blue-700 cursor-pointer" onClick={handleLogOut}>
+            Log Out
+          </div>
+        ) : (
+          <div className="w-[60px]" />
+        )}
       </div>
 
       {/* Profile Info Section */}
@@ -162,10 +167,13 @@ const Profile = () => {
               targetUserId={profileData._id}
               onSuccess={refreshProfile}
             />
-            <button className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl" onClick={()=> {
-              dispatch(setSelectedUser(profileData))
-              navigate("/messagearea")
-            }}>
+            <button
+              className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl"
+              onClick={() => {
+                dispatch(setSelectedUser(profileData));
+                navigate("/messagearea");
+              }}
+            >
               Message
             </button>
           </>
@@ -174,25 +182,26 @@ const Profile = () => {
 
       <div className="w-full min-h-[100vh] flex justify-center">
         <div className="w-full max-w-[900px] flex flex-col items-center rounded-t-[30px] bg-white relative gap-[20px] pt-[30px] px-[20px] pb-[30px] mb-[50px]">
-       
-       {profileData?._id === userData?._id &&    <div
-            className="w-[60%] max-w-[400px] h-[80px] bg-white rounded-full flex justify-center items-center gap-[10px]
+          {profileData?._id === userData?._id && (
+            <div
+              className="w-[60%] max-w-[400px] h-[80px] bg-white rounded-full flex justify-center items-center gap-[10px]
       "
-          >
-            <div
-              className={`${postType == "posts" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl hover:shadow-black`}
-              onClick={() => setPostType("posts")}
             >
-              Posts
-            </div>
+              <div
+                className={`${postType == "posts" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl hover:shadow-black`}
+                onClick={() => setPostType("posts")}
+              >
+                Posts
+              </div>
 
-            <div
-              className={`${postType == "saved" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl shadow-black`}
-              onClick={() => setPostType("saved")}
-            >
-              Saved
+              <div
+                className={`${postType == "saved" ? "bg-black text-white shadow-2xl shadow-black" : ""} w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl shadow-black`}
+                onClick={() => setPostType("saved")}
+              >
+                Saved
+              </div>
             </div>
-          </div>}
+          )}
 
           <Nav />
 
@@ -209,7 +218,6 @@ const Profile = () => {
 
               {postType == "saved" &&
                 userData?.saved?.map((savedPost, index) => {
-
                   const completePost =
                     postData.find(
                       (p) => String(p._id) === String(savedPost._id),
@@ -225,12 +233,13 @@ const Profile = () => {
             </>
           )}
 
-        {profileData?._id != userData?._id && (
-            postData.map((post, index) => (
-              post.author?._id == profileData?._id && <Post postData={post} key={index}/>
-            ))
-           
-          )}
+          {profileData?._id != userData?._id &&
+            postData.map(
+              (post, index) =>
+                post.author?._id == profileData?._id && (
+                  <Post postData={post} key={index} />
+                ),
+            )}
         </div>
       </div>
     </div>

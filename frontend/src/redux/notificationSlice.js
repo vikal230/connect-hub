@@ -11,7 +11,6 @@ const notificationSlice = createSlice({
       state.notificationData = action.payload;
     },
     addRealtimeNotification: (state, action) => {
-      // unshift() naye data ko array ke shuru me dalta hai
       if (Array.isArray(state.notificationData)) {
         state.notificationData.unshift(action.payload);
       } else {

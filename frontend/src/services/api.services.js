@@ -123,7 +123,7 @@ export const getProfile = async (userName) => {
   try {
     const response = await api.get(`/api/user/getprofile/${userName}`);
     // console.log(response.data);
-    return response;
+    return response.data;
   } catch (error) {
     console.log("frontend api get profile error", error);
     throw error;

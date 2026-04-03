@@ -25,11 +25,12 @@ import { setNotifications } from "../redux/notificationSlice";
 import { useNavigate } from "react-router-dom";
 import { setCurentUserStory } from "../redux/storySlice";
 import { useSelector } from "react-redux";
+import { setLoading } from "../redux/userSlice";
+
 
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { userData } = useSelector((state) => state.user);
   const { notificationData } = useSelector((state) => state.notification);
 
   const handleSignup = async ({ name, userName, email, password }) => {
@@ -95,10 +96,12 @@ export const useAuth = () => {
       return data;
     } catch (error) {
       console.log(error);
+        dispatch(setUserData(null));
+       dispatch(setLoading(false));
       if (error.response && error.response.status === 401) {
         localStorage.removeItem("token");
 
-        dispatch(setUserData(null));
+      
         navigate("/signin");
       }
       throw error;
@@ -132,7 +135,9 @@ export const useAuth = () => {
   const handleGetProfile = async (userName) => {
     try {
       const data = await getProfile(userName);
-      dispatch(setProfileData(data.user));
+      if (data.success) {
+        dispatch(setProfileData(data.user));
+      }
       return data.user;
     } catch (error) {
       console.log(error);

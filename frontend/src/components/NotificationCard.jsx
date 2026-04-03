@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import dp from "../assets/dp.png";
-import { useSelector } from "react-redux";
 
 const NotificationCard = ({ noti }) => {
   const navigate = useNavigate();
-  const { userData } = useSelector((state) => state.user);
 
   return (
     <div className="w-full flex justify-between items-center min-h-[50px] h-[50px] p-[5px] bg-gray-800 rounded-full">

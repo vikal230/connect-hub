@@ -13,7 +13,7 @@ const userSlice = createSlice({
   initialState: {
     userData: null,
     loading: true,
-    suggestedUsers: null,
+    suggestedUsers: [],
     profileData: null,
     following: [],
     searchData: null,
@@ -26,11 +26,10 @@ const userSlice = createSlice({
     },
     setsuggestedUsers: (state, action) => {
       state.suggestedUsers = action.payload;
-      state.loading = false;
+     
     },
     setProfileData: (state, action) => {
       state.profileData = action.payload;
-      state.loading = false;
     },
     setFollowing: (state, action) => {
       state.following = normalizeFollowingIds(action.payload);
@@ -46,6 +45,9 @@ const userSlice = createSlice({
     setSearchData: (state, action) => {
       state.searchData = action.payload;
     },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
   },
 });
 
@@ -55,6 +57,7 @@ export const {
   setProfileData,
   toggleFollow,
   setFollowing,
-  setSearchData
+  setSearchData,
+  setLoading
 } = userSlice.actions;
 export default userSlice.reducer;

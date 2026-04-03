@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { gentoken } from "../config/token.js";
-import { sendMail } from "../config/Mail.js";
+import { sendMail, sendVerifyMail } from "../config/Mail.js";
 /**
  * @route POST /api/auth/signup
  * @description Register a new user with name, username, email and password

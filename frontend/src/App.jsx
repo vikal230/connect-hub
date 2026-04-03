@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -29,7 +28,6 @@ import { addRealtimeNotification } from "./redux/notificationSlice";
 
 const App = () => {
   // const location = useLocation();
-  const navigate = useNavigate();
   const { getPrevChatUsersApiHook } = useMessageHooks();
   const dispatch = useDispatch();
   const { handleGetCurrentUser } = useAuth();

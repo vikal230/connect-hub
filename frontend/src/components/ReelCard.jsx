@@ -21,7 +21,6 @@ const ReelCard = ({ reel }) => {
   const [showHeart, setShowHeart] = useState(false);
   const [showComment, SetShowComment] = useState(false);
   const { userData } = useSelector((state) => state.user);
-  const { reelData } = useSelector((state) => state.reel);
   const [message, setMessage] = useState("");
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -139,7 +138,7 @@ const ReelCard = ({ reel }) => {
             </div>
           )}
 
-          {reel.comments?.map((com, index) => (
+          {reel.comments?.map((com) => (
             <div className="w-full flex flex-col gap-[5px] border-b-[1px] border-gray-800 justify-center pb-[10px] mt-[10px]">
               <div className="flex justify-start items-center md:gap-[20px] gap-[10px]">
                 <div className="w-[30px] h-[30px] md:w-[40px] md:h-[40px] border-2 border-black rounded-full cursor-pointer overflow-hidden">
