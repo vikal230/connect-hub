@@ -67,7 +67,7 @@ const App = () => {
 
   useEffect(() => {
     if (userData) {
-      const socketIo = io("http://localhost:8000", {
+      const socketIo = io(import.meta.env.VITE_API_URL, {
         query: {
           userId: userData._id,
         },

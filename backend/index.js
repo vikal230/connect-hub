@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [process.env.FRONTEND_VERCEL_LINK,"http://localhost:5173"],
     credentials: true,
   }),
 );
@@ -33,7 +33,7 @@ app.use("/api/reel", reelRouter);
 app.use("/api/story", storyRouter);
 app.use("/api/message", messageRouter);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000
 server.listen(port, () => {
   connectDb();
   console.log(`server running on port http://localhost:${port}`);
