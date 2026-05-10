@@ -12,7 +12,7 @@ const OtherUser = ({ user }) => {
       <div className="flex items-center gap-3">
         {/* Profile Image */}
         <div
-          className="w-11 h-11 rounded-full p-[2px] bg-zinc-800 group-hover:bg-sky-500 transition-colors cursor-pointer overflow-hidden shadow-lg"
+          className="w-11 h-11 rounded-full p-[2px] bg-zinc-800 group-hover:bg-zinc-700 transition-colors cursor-pointer overflow-hidden shadow-lg"
           onClick={() => navigate(`/profile/${user.userName}`)}
         >
           <img
@@ -38,7 +38,7 @@ const OtherUser = ({ user }) => {
 
       {/* Action Button */}
       <FollowButton 
-        tailwind="px-4 h-[34px] bg-zinc-100 text-black text-[12px] font-black rounded-full hover:bg-white active:scale-95 transition-all shadow-md" 
+        tailwind="px-4 py-1.5 bg-black text-white text-[12px] font-bold rounded-full hover:bg-zinc-800 transition-all active:scale-95" 
         targetUserId={user._id}
       />
     </div>

@@ -26,8 +26,15 @@ const FollowButton = ({ targetUserId, tailwind, onSuccess }) => {
     }
   };
   return (
-    <button className={tailwind} onClick={handleFollowButton}>
-      {isFollowing ? "following" : "follow"}
+    <button
+      className={`${tailwind} min-w-[92px] whitespace-nowrap text-center border shadow-sm transition-colors active:scale-100 ${
+        isFollowing
+          ? "bg-zinc-100 text-zinc-700 border-zinc-200 hover:bg-zinc-200"
+          : "bg-sky-500 text-white border-sky-500 hover:bg-sky-400"
+      }`}
+      onClick={handleFollowButton}
+    >
+      {isFollowing ? "Following" : "Follow"}
     </button>
   );
 };

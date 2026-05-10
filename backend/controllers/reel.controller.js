@@ -180,3 +180,38 @@ export const getAllReels = async (req, res) => {
     });
   }
 };
+
+export const deleteReel = async (req, res) => {
+  try {
+    const { reelId } = req.params;
+
+    const reel = await Reel.findById(reelId);
+    if (!reel) {
+      return res.status(404).json({
+        success: false,
+        message: "Reel not found!",
+      });
+    }
+
+    if (reel.author.toString() !== req.userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only delete your own reel!",
+      });
+    }
+
+    await Reel.findByIdAndDelete(reelId);
+    await User.findByIdAndUpdate(req.userId, { $pull: { reels: reelId } });
+
+    return res.status(200).json({
+      success: true,
+      message: "Reel deleted successfully!",
+      reelId,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `Delete reel error: ${error.message}`,
+    });
+  }
+};

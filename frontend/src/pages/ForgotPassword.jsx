@@ -58,13 +58,13 @@ const ForgotPassword = () => {
   };
 
   // Common Card Classes for
-  const cardClasses = "w-[90%] max-w-[450px] bg-zinc-900/40 backdrop-blur-xl rounded-[35px] flex justify-center items-center flex-col border border-zinc-800 p-10 shadow-2xl animate-in fade-in zoom-in duration-500";
+  const cardClasses = "w-[90%] max-w-[450px] bg-[#09090b] rounded-[35px] flex justify-center items-center flex-col border border-zinc-800 p-10 shadow-2xl";
   // Common Input Group Classes
-  const inputGroupClasses = "relative flex items-center justify-start w-full h-[55px] rounded-2xl border border-zinc-800 bg-zinc-900/50 group focus-within:border-zinc-500 transition-all";
+  const inputGroupClasses = "relative flex items-center justify-start w-full h-[55px] rounded-2xl border border-zinc-800 bg-zinc-900/50 group focus-within:border-zinc-500";
   // Common Input Classes
   const inputClasses = "w-full h-full rounded-2xl px-5 pl-12 outline-none bg-transparent text-white font-medium placeholder:text-zinc-600";
   // Common Icon Classes
-  const iconClasses = "absolute left-4 text-zinc-500 text-xl group-focus-within:text-white transition-colors";
+  const iconClasses = "absolute left-4 text-zinc-500 text-xl group-focus-within:text-white";
   // Common Label Classes
   const labelClasses = "text-zinc-500 text-xs font-bold uppercase tracking-widest absolute -top-6 left-2";
 
@@ -73,7 +73,7 @@ const ForgotPassword = () => {
       
       {step === 1 && (
         <div className={cardClasses}>
-          <h2 className="text-3xl font-black text-white tracking-tighter mb-10">Forgot Password</h2>
+          <h2 className="text-3xl font-black text-zinc-100 tracking-tighter mb-10">Forgot Password</h2>
           
           <div className="w-full flex flex-col gap-8">
             <div className="relative w-full">
@@ -92,10 +92,10 @@ const ForgotPassword = () => {
               </div>
             </div>
 
-            {err && <p className="text-red-500 text-sm font-bold text-center animate-pulse">{err}</p>}
+            {err && <p className="text-red-500 text-sm font-bold text-center">{err}</p>}
 
             <button
-              className={`w-full h-[55px] font-bold rounded-2xl transition-all flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"}`}
+              className={`w-full h-[55px] font-bold rounded-2xl flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 shadow-xl"}`}
               disabled={loading}
               onClick={handleSendOtpStep1}
             >
@@ -107,7 +107,7 @@ const ForgotPassword = () => {
 
       {step === 2 && (
         <div className={cardClasses}>
-          <h2 className="text-3xl font-black text-white tracking-tighter mb-10">Verify OTP</h2>
+          <h2 className="text-3xl font-black text-zinc-100 tracking-tighter mb-10">Verify OTP</h2>
           
           <div className="w-full flex flex-col gap-8">
             <div className="relative w-full">
@@ -126,23 +126,23 @@ const ForgotPassword = () => {
               </div>
             </div>
 
-            {err && <p className="text-red-500 text-sm font-bold text-center animate-pulse">{err}</p>}
+            {err && <p className="text-red-500 text-sm font-bold text-center">{err}</p>}
 
             <button
-              className={`w-full h-[55px] font-bold rounded-2xl transition-all flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"}`}
+              className={`w-full h-[55px] font-bold rounded-2xl flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 shadow-xl"}`}
               disabled={loading}
               onClick={handleIsVerify2}
             >
               {loading ? <ClipLoader size={24} color="black" /> : "Verify & Proceed"}
             </button>
-            <button onClick={() => setStep(1)} className="text-zinc-500 text-xs font-bold hover:text-white transition-colors -mt-4">Back to Email</button>
+            <button onClick={() => setStep(1)} className="text-zinc-500 text-xs font-bold hover:text-zinc-100 -mt-4">Back to Email</button>
           </div>
         </div>
       )}
 
       {step === 3 && (
         <div className={cardClasses}>
-          <h2 className="text-3xl font-black text-white tracking-tighter mb-10">New Password</h2>
+          <h2 className="text-3xl font-black text-zinc-100 tracking-tighter mb-10">New Password</h2>
           
           <div className="w-full flex flex-col gap-8">
             <div className="relative w-full">
@@ -177,10 +177,10 @@ const ForgotPassword = () => {
               </div>
             </div>
 
-            {err && <p className="text-red-500 text-sm font-bold text-center animate-pulse">{err}</p>}
+            {err && <p className="text-red-500 text-sm font-bold text-center">{err}</p>}
 
             <button
-              className={`w-full h-[55px] font-bold rounded-2xl transition-all flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-xl"}`}
+              className={`w-full h-[55px] font-bold rounded-2xl flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500" : "bg-white text-black hover:bg-zinc-200 shadow-xl"}`}
               disabled={loading}
               onClick={handleResetPassword3}
             >

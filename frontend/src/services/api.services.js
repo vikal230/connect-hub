@@ -253,6 +253,26 @@ export const savedPostApi = async (postId) => {
   }
 };
 
+export const deletePostApi = async (postId) => {
+  try {
+    const response = await api.delete(`/api/post/delete/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const deleteReelApi = async (reelId) => {
+  try {
+    const response = await api.delete(`/api/reel/delete/${reelId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const followApi = async ({ targetUserId }) => {
   try {
     const response = await api.get(`/api/user/follow/${targetUserId}`);

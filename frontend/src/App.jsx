@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -28,6 +28,7 @@ import { addRealtimeNotification } from "./redux/notificationSlice";
 
 const App = () => {
   // const location = useLocation();
+  const [toast, setToast] = useState(null);
   const { getPrevChatUsersApiHook } = useMessageHooks();
   const dispatch = useDispatch();
   const { handleGetCurrentUser } = useAuth();
@@ -103,6 +104,29 @@ const App = () => {
     }
   }, [userData]);
 
+  useEffect(() => {
+    let timeoutId;
+
+    const handleToastEvent = (event) => {
+      const detail = event.detail;
+      clearTimeout(timeoutId);
+      setToast(detail);
+
+      if (!detail?.sticky) {
+        timeoutId = setTimeout(() => {
+          setToast(null);
+        }, 3000);
+      }
+    };
+
+    window.addEventListener("app-toast", handleToastEvent);
+
+    return () => {
+      window.removeEventListener("app-toast", handleToastEvent);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div>
@@ -112,6 +136,21 @@ const App = () => {
   }
   return (
     <>
+      {toast && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[999] w-[92%] max-w-[380px]">
+          <div
+            className={`w-full rounded-2xl border px-4 py-3 text-sm font-medium shadow-xl backdrop-blur-sm ${
+              toast.type === "success"
+                ? "bg-zinc-900/95 border-zinc-700 text-zinc-100"
+                : toast.type === "error"
+                  ? "bg-red-950/95 border-red-800 text-red-100"
+                  : "bg-zinc-900/95 border-sky-700 text-zinc-100"
+            }`}
+          >
+            {toast.message}
+          </div>
+        </div>
+      )}
       <Routes>
         <Route
           path="/"

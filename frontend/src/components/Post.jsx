@@ -6,6 +6,7 @@ import {
   GoBookmarkFill,
   GoHeartFill,
 } from "react-icons/go";
+import { BsThreeDots } from "react-icons/bs";
 import dp from "../assets/dp.png";
 import VideoPlayer from "./VideoPlayer";
 import { useSelector } from "react-redux";
@@ -18,9 +19,12 @@ const Post = ({ postData }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [showComment, setShowComment] = useState(false);
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
   const { userData } = useSelector((state) => state.user);
-  const { handleFetchPostLike, handleCommentOnPost, handleSavedPost } =
+  const { handleFetchPostLike, handleCommentOnPost, handleSavedPost, handleDeletePost } =
     usePostStoryReelHook();
+  const isCurrentUserPost =
+    String(userData?._id || "") === String(postData?.author?._id || "");
 
   const submitCommentOnPost = async () => {
     if (!message.trim()) return;
@@ -39,6 +43,15 @@ const Post = ({ postData }) => {
       await handleSavedPost(postId);
     } catch (error) {
       console.log("handle Saved Post Error", error);
+    }
+  };
+
+  const handleDeletePostFunction = async (postId) => {
+    try {
+      await handleDeletePost(postId);
+      setShowDeleteMenu(false);
+    } catch (error) {
+      console.log("handle delete post error", error);
     }
   };
 
@@ -66,23 +79,46 @@ const Post = ({ postData }) => {
           </div>
         </div>
         
-        {userData?._id !== postData.author?._id && (
+        {!isCurrentUserPost ? (
           <FollowButton
             tailwind="px-4 py-1.5 bg-black text-white text-[12px] font-bold rounded-full hover:bg-zinc-800 transition-all active:scale-95"
             targetUserId={postData.author?._id}
           />
+        ) : (
+          <div className="relative">
+            <div className="relative">
+              <button
+                className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
+                onClick={() => setShowDeleteMenu((prev) => !prev)}
+              >
+                <BsThreeDots className="text-zinc-700 text-[18px]" />
+              </button>
+              {showDeleteMenu && (
+                <button
+                  className="absolute right-0 top-[42px] px-4 py-2 rounded-xl bg-white border border-zinc-200 text-red-500 text-[13px] font-semibold shadow-lg hover:bg-zinc-50"
+                  onClick={() => handleDeletePostFunction(postData._id)}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          </div>
         )}
       </div>
 
       {/* Media Section */}
       <div className="w-full px-2 overflow-hidden">
-        <div className="w-full rounded-[24px] overflow-hidden bg-zinc-50 border border-zinc-100">
+        <div
+          className={`w-full rounded-[24px] overflow-hidden border border-zinc-100 flex items-center justify-center ${
+            postData.mediaType === "video" ? "bg-black" : "bg-white"
+          }`}
+        >
           {postData.mediaType === "video" ? (
             <VideoPlayer media={postData.media} />
           ) : (
             <img
               src={postData.media}
-              className="w-full max-h-[500px] object-cover"
+              className="w-full h-auto max-h-[500px] object-contain mx-auto"
               alt="post content"
             />
           )}

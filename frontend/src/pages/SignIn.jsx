@@ -163,47 +163,88 @@ const SignIn = () => {
   
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
-    setloading(true);
     setError("");
+    const trimmedUserName = userName.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedUserName && !trimmedPassword) {
+      setError("All fields are required to fill");
+      return;
+    }
+
+    if (!trimmedUserName) {
+      setError("UserName is required");
+      return;
+    }
+
+    const emailPattern = /^\S+@\S+\.\S+$/;
+    if (!emailPattern.test(trimmedUserName)) {
+      setError("Please enter a valid email");
+      return;
+    }
+
+    if (!trimmedPassword) {
+      setError("Password is required");
+      return;
+    }
+
+    if (trimmedPassword.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    setloading(true);
     try {
-      await handleSignIn({ userName, password });
+      await handleSignIn({ userName: trimmedUserName, password: trimmedPassword });
       navigate("/");
     } catch (error) {
       console.log(error);
-      setError(error.response?.data?.message);
+      const backendMessage = error.response?.data?.message || "";
+
+      if (backendMessage.toLowerCase().includes("user not found")) {
+        setError("Email not exist, please signup first");
+      } else if (backendMessage.toLowerCase().includes("password is wrong")) {
+        setError("Password incorrect, please enter right password");
+      } else if (backendMessage.toLowerCase().includes("valid email")) {
+        setError("Please enter a valid email");
+      } else if (backendMessage.toLowerCase().includes("password must be at least 6 characters")) {
+        setError("Password must be at least 6 characters");
+      } else {
+        setError("Please check your login details");
+      }
     } finally {
       setloading(false);
     }
   };
 
   return (
-    <div className="w-full h-screen bg-slate-50 flex flex-col justify-center items-center">
+    <div className="w-full h-screen bg-[#0b0b0b] flex flex-col justify-center items-center">
       
-      <div className="w-[90%] lg:max-w-[60%] h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden shadow-2xl shadow-slate-200">
+      <div className="w-[90%] lg:max-w-[60%] h-[600px] bg-[#09090b] rounded-2xl flex justify-center items-center overflow-hidden shadow-2xl border border-zinc-800">
         
-        <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center justify-center p-[10px] gap-[20px]">
+        <div className="w-full lg:w-[50%] h-full bg-[#09090b] flex flex-col items-center justify-center p-[10px] gap-[20px]">
           
           <div className="flex gap-[10px] items-center text-[20px] font-semibold mt-[40px]">
-            <span className="bg-indigo-50 text-slate-700 py-3 px-10 rounded-3xl shadow-sm hover:shadow-md hover:scale-105 transition duration-300 ease-in-out">
-              Sign In <span className="text-indigo-600 font-bold">HYPE</span>
+            <span className="bg-zinc-900 text-zinc-100 py-3 px-10 rounded-3xl border border-zinc-800">
+              Sign In <span className="text-sky-500 font-bold">HYPE</span>
             </span>
           </div>
 
           {/* Input 1 */}
           <div
-            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-slate-200 focus-within:border-indigo-500 transition-colors"
+            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-zinc-800 focus-within:border-zinc-500"
             onClick={() => setInputClicked({ ...inputClicked, userName: true })}
           >
             <label
               htmlFor="userName"
-              className={`text-slate-500 absolute left-[20px] p-[5px] bg-white text-[15px] transition-all ${inputClicked.userName || userName ? "top-[-15px] text-indigo-600 font-medium" : ""}`}
+              className={`text-zinc-500 absolute left-[20px] p-[5px] bg-[#09090b] text-[15px] ${inputClicked.userName || userName ? "top-[-15px] text-zinc-300 font-medium" : ""}`}
             >
               Enter Your userName
             </label>
             <input
               type="text"
               id="userName"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent"
+              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent text-white"
               onChange={(e) => setUserName(e.target.value)}
               value={userName}
               required
@@ -212,12 +253,12 @@ const SignIn = () => {
 
           {/* Input 2 */}
           <div
-            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-slate-200 focus-within:border-indigo-500 transition-colors"
+            className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-zinc-800 focus-within:border-zinc-500"
             onClick={() => setInputClicked({ ...inputClicked, password: true })}
           >
             <label
               htmlFor="password"
-              className={`text-slate-500 absolute left-[20px] p-[5px] bg-white text-[15px] transition-all ${inputClicked.password || password ? "top-[-15px] text-indigo-600 font-medium" : ""}`}
+              className={`text-zinc-500 absolute left-[20px] p-[5px] bg-[#09090b] text-[15px] ${inputClicked.password || password ? "top-[-15px] text-zinc-300 font-medium" : ""}`}
             >
               Enter password
             </label>
@@ -225,26 +266,26 @@ const SignIn = () => {
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent"
+              className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0 bg-transparent text-white"
               onChange={(e) => SetPassword(e.target.value)}
               value={password}
               required
             />
             {!showPassword ? (
               <IoIosEye
-                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px] text-slate-400 hover:text-indigo-600"
+                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px] text-zinc-500 hover:text-zinc-100"
                 onClick={() => setShowPassword(true)}
               />
             ) : (
               <IoIosEyeOff
-                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px] text-slate-400 hover:text-indigo-600"
+                className="absolute cursor-pointer right-[20px] w-[25px] h-[25px] text-zinc-500 hover:text-zinc-100"
                 onClick={() => setShowPassword(false)}
               />
             )}
           </div>
 
           <p
-            className="w-[90%] px-[20px] cursor-pointer text-sm text-slate-500 hover:text-indigo-600 text-right"
+            className="w-[90%] px-[20px] cursor-pointer text-sm text-zinc-500 hover:text-zinc-100 text-right"
             onClick={() => navigate("/forgot-password")}
           >
             forgot password?
@@ -253,7 +294,7 @@ const SignIn = () => {
           {err && <p className="text-red-500 text-sm">{err}</p>}
 
           <button
-            className={`w-[70%] px-[20px] py-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-[50px] rounded-2xl mt-[20px] flex justify-center items-center gap-2 transition-colors ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer shadow-lg shadow-indigo-200"}`}
+            className={`w-[70%] px-[20px] py-[10px] text-black font-semibold h-[50px] rounded-2xl mt-[20px] flex justify-center items-center gap-2 ${loading ? "bg-zinc-800 text-zinc-500 cursor-not-allowed" : "bg-white hover:bg-zinc-200 cursor-pointer shadow-lg"}`}
             onClick={handleSubmitSignIn}
             disabled={loading}
           >
@@ -264,10 +305,10 @@ const SignIn = () => {
             )}
           </button>
 
-          <p className="text-slate-600 cursor-pointer mt-2">
+          <p className="text-zinc-500 cursor-pointer mt-2">
             Already Have An Account?{" "}
             <span
-              className="text-indigo-600 font-semibold hover:underline"
+              className="text-zinc-100 font-semibold hover:text-sky-400"
               onClick={() => navigate("/signup")}
             >
               Sign Up
@@ -275,9 +316,9 @@ const SignIn = () => {
           </p>
         </div>
 
-        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-gradient-to-br from-indigo-600 to-violet-700 flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px]">
-          <img src={logo} alt="vite image" className="drop-shadow-xl" />
-          <p className="tracking-wide text-indigo-100">We Become What We Think Abouth</p>
+        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#0b0b0b] border-l border-zinc-800 flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px]">
+          <img src={logo} alt="vite image" />
+          <p className="tracking-wide text-zinc-400">We Become What We Think Abouth</p>
         </div>
       </div>
     </div>

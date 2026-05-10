@@ -36,6 +36,14 @@ export const useAuth = () => {
   const handleSignup = async ({ name, userName, email, password }) => {
     try {
       const data = await signup({ name, userName, email, password });
+      window.dispatchEvent(
+        new CustomEvent("app-toast", {
+          detail: {
+            message: "User registered successfully, enjoy your day.",
+            type: "success",
+          },
+        }),
+      );
       // console.log(data);
       return data;
     } catch (error) {
@@ -47,7 +55,16 @@ export const useAuth = () => {
   const handleSignIn = async ({ userName, password }) => {
     try {
       await signIn({ userName, password });
-      return await handleGetCurrentUser();
+      const data = await handleGetCurrentUser();
+      window.dispatchEvent(
+        new CustomEvent("app-toast", {
+          detail: {
+            message: "Welcome back! Your account is ready, enjoy your day.",
+            type: "success",
+          },
+        }),
+      );
+      return data;
     } catch (error) {
       console.log("handleSignIn error", error);
       throw error;
@@ -113,6 +130,14 @@ export const useAuth = () => {
       // console.log(data);
       dispatch(setUserData(null));
       navigate("/signin");
+      window.dispatchEvent(
+        new CustomEvent("app-toast", {
+          detail: {
+            message: "You logged out successfully.",
+            type: "success",
+          },
+        }),
+      );
       return data;
     } catch (error) {
       console.log(error);
@@ -182,6 +207,14 @@ export const useAuth = () => {
       if (data?.success) {
         dispatch(setUserData(data.user));
         dispatch(setProfileData(data.user));
+        window.dispatchEvent(
+          new CustomEvent("app-toast", {
+            detail: {
+              message: "Profile updated successfully.",
+              type: "success",
+            },
+          }),
+        );
       }
       return data;
     } catch (error) {
@@ -194,7 +227,7 @@ export const useAuth = () => {
     try {
       const result = await getAllNotificationsApi();
       dispatch(setNotifications(result.notifications));
-      console.log(result.notifications);
+      // console.log(result.notifications);
       return result.notifications;
     } catch (error) {
       return error;

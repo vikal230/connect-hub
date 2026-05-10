@@ -55,11 +55,19 @@ const Reels = () => {
       </div>
 
       <div className="h-screen w-full lg:w-[480px] overflow-y-scroll snap-y snap-mandatory scrollbar-hide bg-zinc-950 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-        {reelData.map((reel, index) => (
-          <div key={reel._id || index} className="h-screen snap-start relative">
-            <ReelCard reel={reel} />
+        {reelData.length > 0 ? (
+          reelData.map((reel, index) => (
+            <div key={reel._id || index} className="h-screen snap-start relative">
+              <ReelCard reel={reel} />
+            </div>
+          ))
+        ) : (
+          <div className="w-full h-screen flex items-center justify-center text-center px-6">
+            <p className="text-zinc-500 text-[18px] font-semibold">
+              No reels available yet.
+            </p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

@@ -88,16 +88,21 @@ const LeftHome = () => {
           <div className="w-full flex flex-col gap-4 px-6">
             <h1 className="text-zinc-400 text-[13px] font-bold uppercase tracking-wider">Suggested for you</h1>
             <div className="flex flex-col gap-1">
-                {suggestedUsers &&
-                suggestedUsers
+                {suggestedUsers && suggestedUsers.length > 0 ? (
+                  suggestedUsers
                     .slice(0, 5)
                     .map((user, index) => (
-                    <OtherUser
+                      <OtherUser
                         key={user._id || index}
                         index={index}
                         user={user}
-                    />
-                    ))}
+                      />
+                    ))
+                ) : (
+                  <p className="text-zinc-500 text-[13px] font-medium leading-relaxed">
+                    No suggested users available right now.
+                  </p>
+                )}
             </div>
           </div>
         </>

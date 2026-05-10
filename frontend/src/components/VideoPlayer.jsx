@@ -43,7 +43,7 @@ const VideoPlayer = ({ media }) => {
   }, []);
 
   return (
-    <div className="relative group w-full h-full cursor-pointer overflow-hidden rounded-[24px] bg-black shadow-lg">
+    <div className="relative group w-full cursor-pointer overflow-hidden rounded-[24px] bg-black shadow-lg flex items-center justify-center">
       {/* Main Video */}
       <video
         ref={videoTag}
@@ -52,7 +52,7 @@ const VideoPlayer = ({ media }) => {
         loop
         muted={mute}
         playsInline
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="w-full h-auto max-h-[500px] object-contain"
         onClick={handleClick}
       />
 

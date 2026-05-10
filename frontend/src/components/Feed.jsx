@@ -67,9 +67,17 @@ const Feed = () => {
         </div>
 
         <div className="w-full max-w-[500px] flex flex-col gap-10">
-            {postData?.map((post, index) => (
-              <Post key={post?._id || index} index={index} postData={post} />
-            ))}
+            {postData?.length > 0 ? (
+              postData.map((post, index) => (
+                <Post key={post?._id || index} index={index} postData={post} />
+              ))
+            ) : (
+              <div className="w-full min-h-[250px] flex items-center justify-center text-center px-6">
+                <p className="text-zinc-500 text-[16px] font-semibold">
+                  No posts available yet.
+                </p>
+              </div>
+            )}
         </div>
       </div>
     </div>

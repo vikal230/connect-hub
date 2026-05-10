@@ -32,6 +32,14 @@ const Profile = () => {
     await handleGetProfile(userName);
   };
 
+  const ownPosts = postData.filter(
+    (post) => String(post?.author?._id || "") === String(profileData?._id || ""),
+  );
+  const savedPosts = userData?.saved || [];
+  const otherUserPosts = postData.filter(
+    (post) => String(post?.author?._id || "") === String(profileData?._id || ""),
+  );
+
   return (
     <div className="w-full min-h-screen bg-[#0b0b0b] overflow-x-hidden no-scrollbar">
       {/* Top Header */}
@@ -184,20 +192,40 @@ const Profile = () => {
             {profileData?._id === userData?._id ? (
               <>
                 {postType === "posts" &&
-                  postData
-                    .filter((post) => String(post?.author?._id || "") === String(profileData?._id || ""))
-                    .map((post) => <Post key={post?._id} postData={post} />)}
+                  (ownPosts.length > 0 ? (
+                    ownPosts.map((post) => <Post key={post?._id} postData={post} />)
+                  ) : (
+                    <div className="w-full min-h-[220px] flex items-center justify-center text-center px-6">
+                      <p className="text-zinc-500 text-[16px] font-semibold">
+                        No posts in My Posts yet.
+                      </p>
+                    </div>
+                  ))}
 
                 {postType === "saved" &&
-                  userData?.saved?.map((savedPost, index) => {
-                    const completePost = postData.find((p) => String(p._id) === String(savedPost._id)) || savedPost;
-                    return <Post key={completePost._id || index} postData={completePost} />;
-                  })}
+                  (savedPosts.length > 0 ? (
+                    savedPosts.map((savedPost, index) => {
+                      const completePost = postData.find((p) => String(p._id) === String(savedPost._id)) || savedPost;
+                      return <Post key={completePost._id || index} postData={completePost} />;
+                    })
+                  ) : (
+                    <div className="w-full min-h-[220px] flex items-center justify-center text-center px-6">
+                      <p className="text-zinc-500 text-[16px] font-semibold">
+                        No saved posts yet.
+                      </p>
+                    </div>
+                  ))}
               </>
             ) : (
-              postData
-                .filter((post) => String(post.author?._id) === String(profileData?._id))
-                .map((post, index) => <Post postData={post} key={index} />)
+              otherUserPosts.length > 0 ? (
+                otherUserPosts.map((post, index) => <Post postData={post} key={index} />)
+              ) : (
+                <div className="w-full min-h-[220px] flex items-center justify-center text-center px-6">
+                  <p className="text-zinc-500 text-[16px] font-semibold">
+                    No posts on this profile yet.
+                  </p>
+                </div>
+              )
             )}
           </div>
         </div>

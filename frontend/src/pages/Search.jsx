@@ -55,28 +55,36 @@ const Search = () => {
 
       {input && (
         <div className="w-full max-w-[800px] flex flex-col gap-[10px]">
-          {searchData?.map((user, index) => (
-            <div
-              key={user._id || index}
-              onClick={() => navigate(`/profile/${user.userName}`)} // Click karne par profile par jayega
-              className="flex items-center gap-[15px] w-full p-[10px] rounded-xl hover:bg-[#1a1f1f] cursor-pointer transition-all duration-300"
-            >
-              {/* Profile Image */}
-              <div className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-800">
-                <img
-                  src={user?.profileImage || dp}
-                  alt="user dp"
-                  className="w-full h-full object-cover"
-                />
+          {searchData?.length > 0 ? (
+            searchData.map((user, index) => (
+              <div
+                key={user._id || index}
+                onClick={() => navigate(`/profile/${user.userName}`)} // Click karne par profile par jayega
+                className="flex items-center gap-[15px] w-full p-[10px] rounded-xl hover:bg-[#1a1f1f] cursor-pointer transition-all duration-300"
+              >
+                {/* Profile Image */}
+                <div className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-800">
+                  <img
+                    src={user?.profileImage || dp}
+                    alt="user dp"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-white font-semibold text-[16px]">
+                    {user?.userName}
+                  </p>
+                  <p className="text-gray-400 text-[14px]">{user?.name}</p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <p className="text-white font-semibold text-[16px]">
-                  {user?.userName}
-                </p>
-                <p className="text-gray-400 text-[14px]">{user?.name}</p>
-              </div>
+            ))
+          ) : (
+            <div className="w-full min-h-[220px] flex items-center justify-center text-center px-6">
+              <p className="text-gray-500 text-[18px] font-semibold">
+                No users found.
+              </p>
             </div>
-          ))}
+          )}
         </div>
       )}
 
