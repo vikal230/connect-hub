@@ -8,6 +8,7 @@ import Nav from "../components/Nav";
 import { useNavigate } from "react-router-dom";
 import FollowButton from "../components/FollowButton";
 import Post from "../components/Post";
+import ReelCard from "../components/ReelCard";
 import { usePostStoryReelHook } from "../hooks/usePostStoryReelHook";
 import { setSelectedUser } from "../redux/messageSlice";
 
@@ -18,13 +19,17 @@ const Profile = () => {
   const [postType, setPostType] = useState("posts");
   const { profileData, userData } = useSelector((state) => state.user);
   const { postData } = useSelector((state) => state.post);
-  const { handleFetchedAllpost } = usePostStoryReelHook();
+  const { reelData } = useSelector((state) => state.reel);
+  const { handleFetchedAllpost, handleGetAllReels } = usePostStoryReelHook();
   const navigate = useNavigate();
 
   useEffect(() => {
     handleGetProfile(userName);
     if (!postData || postData.length === 0) {
       handleFetchedAllpost();
+    }
+    if (!reelData || reelData.length === 0) {
+      handleGetAllReels();
     }
   }, [userName]);
 
@@ -34,6 +39,9 @@ const Profile = () => {
 
   const ownPosts = postData.filter(
     (post) => String(post?.author?._id || "") === String(profileData?._id || ""),
+  );
+  const ownReels = reelData.filter(
+    (reel) => String(reel?.author?._id || "") === String(profileData?._id || ""),
   );
   const savedPosts = userData?.saved || [];
   const otherUserPosts = postData.filter(
@@ -192,8 +200,11 @@ const Profile = () => {
             {profileData?._id === userData?._id ? (
               <>
                 {postType === "posts" &&
-                  (ownPosts.length > 0 ? (
-                    ownPosts.map((post) => <Post key={post?._id} postData={post} />)
+                  (ownPosts.length > 0 || ownReels.length > 0 ? (
+                    <>
+                      {ownPosts.map((post) => <Post key={post?._id} postData={post} />)}
+                      {ownReels.map((reel) => <ReelCard key={reel?._id} reel={reel} isFeedView />)}
+                    </>
                   ) : (
                     <div className="w-full min-h-[220px] flex items-center justify-center text-center px-6">
                       <p className="text-zinc-500 text-[16px] font-semibold">

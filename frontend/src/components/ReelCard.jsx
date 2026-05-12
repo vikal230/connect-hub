@@ -100,7 +100,7 @@ const ReelCard = ({ reel, isFeedView = false }) => {
     <div
       className={`w-full relative overflow-hidden group ${
         isFeedView
-          ? "bg-white rounded-[32px] border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col gap-3 p-4"
+          ? "max-w-[480px] rounded-[32px] bg-white border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col gap-3 p-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] mb-4"
           : "h-full flex items-center justify-center bg-black"
       }`}
     >
@@ -151,7 +151,7 @@ const ReelCard = ({ reel, isFeedView = false }) => {
           src={reel?.media}
           className={`bg-black ${
             isFeedView
-              ? "w-full h-auto max-h-[650px] object-contain"
+              ? "w-full h-auto max-h-[500px] object-contain"
               : "w-full h-full object-cover sm:object-contain"
           }`}
           onClick={handleClick}
@@ -281,7 +281,7 @@ const ReelCard = ({ reel, isFeedView = false }) => {
                 className="flex items-center gap-1.5 cursor-pointer group"
                 onClick={() => SetShowComment((prev) => !prev)}
               >
-                <GoComment className="text-[25px] text-zinc-800 group-hover:text-sky-500 transition-colors" />
+                <GoComment className="text-[26px] text-zinc-800 group-hover:text-sky-500 transition-colors" />
                 <span className="text-[13px] font-bold text-zinc-700">
                   {reel?.comments?.length}
                 </span>
