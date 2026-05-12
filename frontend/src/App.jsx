@@ -45,13 +45,14 @@ const App = () => {
   const { socket } = useSelector((state) => state.socket);
   const publicRoutes = ["/signin", "/signup", "/forgot-password"];
   const isPublicRoute = publicRoutes.includes(location.pathname);
+  const isAuthEntryRoute = isPublicRoute || (!userData && location.pathname === "/");
 
   useEffect(() => {
     handleGetCurrentUser().catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (isPublicRoute) {
+    if (isAuthEntryRoute) {
       setBootLoading(false);
       return;
     }
@@ -61,7 +62,7 @@ const App = () => {
     }, 350);
 
     return () => clearTimeout(timer);
-  }, [isPublicRoute]);
+  }, [isAuthEntryRoute]);
 
   useEffect(() => {
     if (!userData) {
@@ -143,7 +144,7 @@ const App = () => {
     };
   }, []);
 
-  if ((!isPublicRoute && bootLoading) || (loading && !userData && !isPublicRoute)) {
+  if ((!isAuthEntryRoute && bootLoading) || (loading && !userData && !isAuthEntryRoute)) {
     return (
       <div>
         <Loader />
