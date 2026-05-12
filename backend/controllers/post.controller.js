@@ -1,110 +1,9 @@
 import { uploadCloudinary } from "../config/cloudinary.js";
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
-import fs from "fs";
 import { io } from "../socket.js";
 import Notification from "../models/notification.model.js";
 import { getSocketId } from "../socket.js";
-
-// export const uploadPost = async (req, res) => {
-//   try {
-//     const { caption, mediaType } = req.body;
-
-//     let mediaUrl;
-//     if (req.file) {
-//       const mediaResult = await uploadCloudinary(req.file.path);
-//       mediaUrl = mediaResult.secure_url;
-//     } else {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Media Type is Required!",
-//       });
-//     }
-
-//     const post = await Post.create({
-//       caption,
-//       mediaType,
-//       media: mediaUrl,
-//       author: req.userId,
-//     });
-
-//     const user = await User.findById(req.userId);
-//     user.posts.push(post._id);
-//     await user.save();
-
-//     const populatedPost = await Post.findById(post._id).populate(
-//       "author",
-//       "name  userName profileImage",
-//     );
-//     return res.status(200).json({
-//       success: true,
-//       message: "Post is populated successfully!",
-//       populatedPost,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: `upload post controller error: ${error}`,
-//     });
-//   }
-// };
-
-// export const getAllPost = async (req, res) => {
-//   try {
-//     const posts = await Post.find({ author: req.userId }).populate(
-//       "author",
-//       "name userName profileImage",
-//     );
-//     return res.status(200).json({
-//       success: true,
-//       message: "all posts fetched successfully",
-//       posts,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: `Get AllPost Controller Error: ${error}`,
-//     });
-//   }
-// };
-
-// export const like = async (req, res) => {
-//   try {
-//     const postId = req.params.postId;
-//     const post = await Post.findById(postId);
-
-//     if (!post) {
-//       return res.status(400).json({
-//         success: false,
-//         message: `post is not define!`,
-//       });
-//     }
-
-//     const alreadyLike = post.likes.some(
-//       (id) => id.toString() == req.userId.toString(),
-//     );
-
-//     if (alreadyLike) {
-//       post.likes = post.likes.filter((id) => id != req.userId);
-//     } else {
-//       post.likes.push(req.userId);
-//     }
-
-//     await post.save();
-
-//    await post.populate("author", "name userName profileImage");
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "post like succesfully!",
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: `like kerne per error aa rha hai! ${error}`,
-//     });
-//   }
-// };
 
 export const uploadPost = async (req, res) => {
   try {
@@ -118,15 +17,12 @@ export const uploadPost = async (req, res) => {
     }
 
     // 1. Cloudinary par upload
-    const mediaResult = await uploadCloudinary(req.file.path);
+    const mediaResult = await uploadCloudinary(req.file);
     if (!mediaResult) {
       return res.status(500).json({
         success: false,
         message: "Cloudinary upload failed!",
       });
-    }
-    if (fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
     }
 
     console.log("post controller upload", mediaResult);

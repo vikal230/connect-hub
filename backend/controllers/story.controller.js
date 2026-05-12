@@ -22,7 +22,7 @@ export const UploadStory = async (req, res) => {
     }
 
     const { mediaType } = req.body;
-    const mediaResult = await uploadCloudinary(req.file.path);
+    const mediaResult = await uploadCloudinary(req.file);
     if (!mediaResult) {
       return res.status(500).json({
         success: false,

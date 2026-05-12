@@ -1,5 +1,4 @@
 import { uploadCloudinary } from "../config/cloudinary.js";
-import fs from "fs";
 import Reel from "../models/reel.model.js";
 import User from "../models/user.model.js";
 import { getSocketId, io } from "../socket.js";
@@ -18,7 +17,7 @@ export const uploadReel = async (req, res) => {
     }
 
     // 2. UPLOAD
-    const mediaResult = await uploadCloudinary(req.file.path);
+    const mediaResult = await uploadCloudinary(req.file);
     if (!mediaResult) {
       return res.status(500).json({
         success: false,

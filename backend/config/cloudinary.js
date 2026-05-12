@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
 export const uploadCloudinary = async (file) => {
   try {
     cloudinary.config({
@@ -8,14 +7,30 @@ export const uploadCloudinary = async (file) => {
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
 
-    const result = await cloudinary.uploader.upload(file, {
-      resource_type: "auto",
+    if (!file || !file.buffer) {
+      throw new Error("File buffer not found");
+    }
+
+    const mediaUrl = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "auto",
+        },
+        (error, result) => {
+          if (error) {
+            return reject(error);
+          }
+
+          resolve(result.secure_url);
+        },
+      );
+
+      stream.end(file.buffer);
     });
-    fs.unlinkSync(file);
-    return result.secure_url;
+
+    return mediaUrl;
   } catch (error) {
     console.log(error);
-    if (fs.existsSync(file)) fs.unlinkSync(file);
     throw error;
-}
-}
+  }
+};
