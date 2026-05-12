@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
-import logo from "../assets/vite.svg";
 import { useAuth } from "../hooks/useAuth";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import Loader from "../components/Loader";
 
 const SignUp = () => {
+  const [pageLoading, setPageLoading] = useState(true);
   const [inputClicked, setInputClicked] = useState({
     name: false,
     email: false,
@@ -26,6 +27,24 @@ const SignUp = () => {
   const dispatch = useDispatch();
   
   const { handleSignup } = useAuth();
+
+  const showRegisterToast = () => {
+    window.dispatchEvent(
+      new CustomEvent("app-toast", {
+        detail: {
+          message: "Register first and enjoy.",
+          type: "success",
+        },
+      }),
+    );
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 250);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (pageLoading) return <Loader />;
   
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
@@ -228,9 +247,46 @@ const SignUp = () => {
           </p>
         </div>
 
-        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#0b0b0b] border-l border-zinc-800 flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px]">
-          <img src={logo} alt="vite image" />
-          <p className="tracking-wide text-zinc-400">We Become What We Think Abouth</p>
+        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#0b0b0b] border-l border-zinc-800 p-8">
+          <div className="w-full h-full rounded-[28px] border border-zinc-800 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.22),_transparent_38%),linear-gradient(180deg,#111827_0%,#09090b_100%)] flex flex-col justify-between p-8 overflow-hidden">
+            <div className="space-y-3">
+              <p className="text-white text-3xl font-black tracking-tight">
+                Join The Hype
+              </p>
+              <p className="text-zinc-400 text-sm leading-6 max-w-[320px]">
+                Create your profile, share your moments, and build a feed that feels fresh every day.
+              </p>
+            </div>
+
+            <div className="relative flex-1 flex items-center justify-center">
+              <div className="absolute w-40 h-40 rounded-full bg-sky-500/20 blur-3xl" />
+              <div className="relative w-[280px] min-h-[280px] rounded-[32px] border border-zinc-700/80 bg-zinc-900/80 p-5 shadow-2xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-zinc-300 text-xs font-semibold">Create Space</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                </div>
+                <div className="mt-5 space-y-3">
+                  <div className="rounded-2xl bg-zinc-800/80 p-4">
+                    <p className="text-white text-sm font-semibold">Build your profile</p>
+                    <p className="text-zinc-400 text-xs mt-1">Add your identity and start sharing your style.</p>
+                  </div>
+                  <div className="rounded-2xl border border-sky-500/30 bg-sky-500/10 p-4">
+                    <p className="text-sky-300 text-sm font-semibold">Stories, posts, reels</p>
+                    <p className="text-zinc-300 text-xs mt-1">Everything you need to stay visible and connected.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div onClick={showRegisterToast} className="rounded-2xl bg-zinc-800/70 px-3 py-2 text-center text-zinc-300 text-[11px] font-semibold cursor-pointer">Create profile</div>
+                    <div onClick={showRegisterToast} className="rounded-2xl bg-zinc-800/70 px-3 py-2 text-center text-zinc-300 text-[11px] font-semibold cursor-pointer">Start sharing</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold">
+              <span onClick={showRegisterToast} className="rounded-full border border-sky-500/40 bg-sky-500/10 px-4 py-2 text-sky-300 cursor-pointer">Fresh profile</span>
+              <span onClick={showRegisterToast} className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-zinc-300 cursor-pointer">Real network</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

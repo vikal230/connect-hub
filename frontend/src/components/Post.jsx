@@ -67,7 +67,7 @@ const Post = ({ postData }) => {
           <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
             <img
               src={postData.author?.profileImage || dp}
-              className="h-10 w-10 rounded-full border-2 border-white object-cover"
+              className="h-10 w-10 rounded-full border-2 border-white object-contain bg-zinc-950"
               alt="profile"
             />
           </div>
@@ -183,7 +183,7 @@ const Post = ({ postData }) => {
             <div className="flex items-center gap-3 mb-4 bg-zinc-50 p-2 rounded-2xl border border-zinc-100">
               <img
                 src={userData?.profileImage || dp}
-                className="w-8 h-8 rounded-full object-cover shadow-sm"
+                className="w-8 h-8 rounded-full object-contain bg-zinc-950 shadow-sm"
                 alt="user"
               />
               <input
@@ -208,7 +208,7 @@ const Post = ({ postData }) => {
                 <div key={comment._id} className="flex gap-3 px-1">
                   <img
                     src={comment.author?.profileImage || dp}
-                    className="w-7 h-7 rounded-full object-cover mt-0.5"
+                    className="w-7 h-7 rounded-full object-contain bg-zinc-950 mt-0.5"
                     alt="avatar"
                   />
                   <div className="flex flex-col bg-zinc-50/50 p-2 px-3 rounded-2xl border border-zinc-100/50">

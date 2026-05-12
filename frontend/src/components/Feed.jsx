@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "../assets/react.svg";
 import { GoHeart } from "react-icons/go";
 import StoryDp from "./StoryDp";
 import Nav from "./Nav";
@@ -28,7 +27,9 @@ const Feed = () => {
     <div className="lg:w-[50%] w-full bg-[#000] min-h-[100vh] lg:h-[100vh] relative lg:overflow-y-auto no-scrollbar">
       {/* Mobile Header */}
       <div className="w-full h-[70px] flex items-center justify-between px-6 lg:hidden bg-black/80 backdrop-blur-md sticky top-0 z-50">
-        <img src={logo} alt="logo" className="w-[30px]" />
+        <div className="w-[34px] h-[34px] rounded-2xl bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.4),_transparent_55%),linear-gradient(180deg,#1f2937_0%,#09090b_100%)] border border-zinc-700 flex items-center justify-center text-white text-[13px] font-black tracking-tight">
+          H
+        </div>
         <div className="items-center flex gap-5">
           <div className="relative cursor-pointer" onClick={handleNotificationClick}>
             <GoHeart className="text-white w-6 h-6" />
@@ -61,12 +62,12 @@ const Feed = () => {
       </div>
 
       {/* Main Posts Container */}
-      <div className="w-full min-h-[100vh] flex flex-col items-center gap-6 p-4 pt-10 bg-[#fafafa] rounded-t-[45px] shadow-[0_-15px_40px_rgba(255,255,255,0.03)] relative pb-[120px]">
+      <div className="w-full min-h-[100vh] flex flex-col items-center gap-6 px-4 pt-10 pb-[120px] bg-[#fafafa] rounded-t-[45px] shadow-[0_-15px_40px_rgba(255,255,255,0.03)] relative">
         <div className="sticky top-4 z-40 w-full flex justify-center">
             <Nav />
         </div>
 
-        <div className="w-full max-w-[500px] flex flex-col gap-10">
+        <div className="w-full max-w-[560px] flex flex-col items-center gap-10">
             {postData?.length > 0 ? (
               postData.map((post, index) => (
                 <Post key={post?._id || index} index={index} postData={post} />

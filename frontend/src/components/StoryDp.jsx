@@ -53,7 +53,7 @@ const StoryDp = ({ profileImage, userName, story }) => {
           <img
             src={profileImage || dp}
             alt={userName}
-            className={`w-full h-full object-cover transition-transform duration-500 ${!viewed && hasStory ? "group-hover:scale-110" : ""}`}
+            className={`w-full h-full object-contain bg-zinc-950 transition-transform duration-500 ${!viewed && hasStory ? "group-hover:scale-110" : ""}`}
           />
         </div>
 

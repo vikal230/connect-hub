@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import logo from "../assets/react.svg";
 import { GoHeart } from "react-icons/go";
 import dp from "../assets/dp.png";
 import { useSelector, useDispatch } from "react-redux";
@@ -42,12 +41,12 @@ const LeftHome = () => {
       }`}
     >
       <div className="w-full h-[80px] flex items-center justify-between px-6">
-        <img
-          src={logo}
-          alt="logo"
-          className="w-[35px] hover:scale-110 transition-transform cursor-pointer"
+        <div
+          className="w-[38px] h-[38px] rounded-2xl bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.4),_transparent_55%),linear-gradient(180deg,#1f2937_0%,#09090b_100%)] border border-zinc-700 flex items-center justify-center text-white text-[14px] font-black tracking-tight hover:scale-110 transition-transform cursor-pointer"
           onClick={() => navigate("/")}
-        />
+        >
+          H
+        </div>
         <div className="relative z-[100] cursor-pointer p-2 hover:bg-zinc-900 rounded-full transition-all" onClick={handleNotificationClick}>
           <GoHeart className="text-white w-[26px] h-[26px]" />
           {notificationData?.length > 0 &&
@@ -65,7 +64,7 @@ const LeftHome = () => {
                 <img
                   src={userData?.profileImage || dp}
                   alt="user"
-                  className="w-full h-full object-cover rounded-full"
+                  className="w-full h-full object-contain rounded-full bg-zinc-950"
                 />
               </div>
               <div>

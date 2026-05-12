@@ -22,7 +22,7 @@ const OnlineUser = ({ user, isChatList = false }) => {
           <img
             src={user.profileImage || dp}
             alt={user.userName}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-contain bg-zinc-950 transition-transform duration-500 group-hover:scale-110"
           />
         </div>
       </div>

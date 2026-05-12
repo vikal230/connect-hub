@@ -1,8 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { usePostStoryReelHook } from "../hooks/usePostStoryReelHook";
+import { toggleFollow } from "../redux/userSlice";
 
 const FollowButton = ({ targetUserId, tailwind, onSuccess }) => {
+  const dispatch = useDispatch();
   const { handleFollow } = usePostStoryReelHook();
   const { following } = useSelector((state) => state.user);
   const isFollowing = following?.some((item) => {
@@ -15,12 +17,14 @@ const FollowButton = ({ targetUserId, tailwind, onSuccess }) => {
 
   const handleFollowButton = async () => {
     try {
+      dispatch(toggleFollow(targetUserId));
       const data = await handleFollow({ targetUserId });
       if (onSuccess) {
         await onSuccess();
       }
       return data;
     } catch (error) {
+      dispatch(toggleFollow(targetUserId));
       console.log("follow button error", error);
       return error;
     }

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const cachedUserData =
+  typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("userData") || "null")
+    : null;
+
 const normalizeFollowingIds = (following = []) =>
   following
     .map((item) => {
@@ -11,8 +16,8 @@ const normalizeFollowingIds = (following = []) =>
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userData: null,
-    loading: true,
+    userData: cachedUserData,
+    loading: !cachedUserData,
     suggestedUsers: [],
     profileData: null,
     following: [],
@@ -23,6 +28,13 @@ const userSlice = createSlice({
     setUserData: (state, action) => {
       state.userData = action.payload;
       state.loading = false;
+      if (typeof window !== "undefined") {
+        if (action.payload) {
+          localStorage.setItem("userData", JSON.stringify(action.payload));
+        } else {
+          localStorage.removeItem("userData");
+        }
+      }
     },
     setsuggestedUsers: (state, action) => {
       state.suggestedUsers = action.payload;

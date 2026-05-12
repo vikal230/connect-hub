@@ -11,6 +11,7 @@ const StoryCard = () => {
   const { handleAllstory } = usePostStoryReelHook();
   const [showViewers, setShowViewers] = useState(false);
   const [progress, SetProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state.user);
   const { storyData, storyList } = useSelector((state) => state.story);
@@ -22,6 +23,10 @@ const StoryCard = () => {
   }, [userData]);
 
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
+
     const interval = setInterval(() => {
       SetProgress((prev) => {
         if (prev >= 100) {
@@ -32,8 +37,9 @@ const StoryCard = () => {
         return prev + 1;
       });
     }, 50);
+
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, [navigate, isPaused]);
 
   const currentStory = storyData && storyData.length > 0 ? storyData[0] : null;
 
@@ -64,11 +70,14 @@ const StoryCard = () => {
           className="text-white cursor-pointer w-7 h-7 hover:scale-110 transition-transform"
           onClick={() => navigate("/")}
         />
-        <div className="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 shadow-lg">
+        <div
+          className="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-zinc-700 to-zinc-900 shadow-lg cursor-pointer"
+          onClick={() => navigate(`/profile/${currentStory?.author?.userName}`)}
+        >
           <img
             src={currentStory?.author?.profileImage || dp}
             alt="profile"
-            className="w-full h-full object-cover rounded-full border-2 border-black"
+            className="w-full h-full object-contain rounded-full border-2 border-black bg-zinc-950"
           />
         </div>
         <div className="flex flex-col">
@@ -89,6 +98,7 @@ const StoryCard = () => {
                   src={currentStory?.media}
                   alt="story-media"
                   className="w-full h-auto max-h-screen object-contain"
+                  onClick={() => setIsPaused((prev) => !prev)}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
@@ -108,7 +118,7 @@ const StoryCard = () => {
                     <img
                       key={viewer?._id || index}
                       src={viewer?.profileImage || dp}
-                      className="w-8 h-8 rounded-full border-2 border-black object-cover shadow-lg"
+                      className="w-8 h-8 rounded-full border-2 border-black object-contain bg-zinc-950 shadow-lg"
                     />
                   ))}
                 </div>
@@ -157,7 +167,7 @@ const StoryCard = () => {
                   <div className="flex items-center gap-3">
                     <img
                       src={viewer?.profileImage || dp}
-                      className="w-11 h-11 rounded-full object-cover border border-zinc-800"
+                      className="w-11 h-11 rounded-full object-contain bg-zinc-950 border border-zinc-800"
                     />
                     <div className="flex flex-col">
                       <span className="text-white text-[14px] font-bold tracking-tight">

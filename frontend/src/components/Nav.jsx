@@ -13,8 +13,8 @@ const Nav = () => {
 
   return (
     <div
-      className="w-[92%] lg:w-[450px] h-[70px] bg-zinc-900/90 backdrop-blur-lg flex 
-      justify-around items-center fixed bottom-[20px] rounded-[30px] 
+      className="w-[92%] lg:w-[500px] h-[70px] bg-zinc-900/90 backdrop-blur-lg flex 
+      justify-around items-center fixed left-1/2 -translate-x-1/2 bottom-[20px] rounded-[30px] 
       border border-zinc-800 shadow-[0_20px_50px_rgba(0,0,0,0.4)] z-[100] px-2 transition-all duration-300"
     >
       {/* Home Icon */}
@@ -48,7 +48,7 @@ const Nav = () => {
         <img
           src={userData?.profileImage || dp}
           alt="profile"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-zinc-950"
         />
       </div>
     </div>

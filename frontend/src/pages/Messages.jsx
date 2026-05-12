@@ -80,7 +80,7 @@ const Messages = () => {
                     <img
                       src={user.profileImage || dp}
                       alt="profile"
-                      className="w-full h-full object-cover rounded-full shadow-lg"
+                      className="w-full h-full object-contain bg-zinc-950 rounded-full shadow-lg"
                     />
                   </div>
                 )}

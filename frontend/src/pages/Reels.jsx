@@ -44,7 +44,7 @@ const Reels = () => {
 
   return (
     <div className="w-screen h-screen bg-black overflow-hidden flex justify-center items-center">
-      <div className="w-full h-[70px] flex items-center gap-4 px-6 fixed top-0 left-0 z-[100] bg-gradient-to-b from-black/60 to-transparent backdrop-blur-[2px]">
+      <div className="w-full h-[70px] flex items-center gap-4 px-6 fixed top-0 left-0 z-[100]">
         <div 
           className="p-2 hover:bg-white/10 rounded-full transition-all cursor-pointer active:scale-90"
           onClick={() => navigate(`/`)}

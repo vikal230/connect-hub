@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -27,8 +27,9 @@ import NotificationPage from "./pages/NotificationPage";
 import { addRealtimeNotification } from "./redux/notificationSlice";
 
 const App = () => {
-  // const location = useLocation();
+  const location = useLocation();
   const [toast, setToast] = useState(null);
+  const [bootLoading, setBootLoading] = useState(true);
   const { getPrevChatUsersApiHook } = useMessageHooks();
   const dispatch = useDispatch();
   const { handleGetCurrentUser } = useAuth();
@@ -42,10 +43,25 @@ const App = () => {
 
   const { userData, loading } = useSelector((state) => state.user);
   const { socket } = useSelector((state) => state.socket);
+  const publicRoutes = ["/signin", "/signup", "/forgot-password"];
+  const isPublicRoute = publicRoutes.includes(location.pathname);
 
   useEffect(() => {
     handleGetCurrentUser().catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (isPublicRoute) {
+      setBootLoading(false);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setBootLoading(false);
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [isPublicRoute]);
 
   useEffect(() => {
     if (!userData) {
@@ -127,7 +143,7 @@ const App = () => {
     };
   }, []);
 
-  if (loading) {
+  if ((!isPublicRoute && bootLoading) || (loading && !userData && !isPublicRoute)) {
     return (
       <div>
         <Loader />

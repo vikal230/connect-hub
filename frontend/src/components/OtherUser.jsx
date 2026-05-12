@@ -18,7 +18,7 @@ const OtherUser = ({ user }) => {
           <img
             src={user.profileImage || dp}
             alt={user.userName}
-            className="w-full h-full object-cover rounded-full border-2 border-[#0b0b0b]"
+            className="w-full h-full object-contain rounded-full border-2 border-[#0b0b0b] bg-zinc-950"
           />
         </div>
 

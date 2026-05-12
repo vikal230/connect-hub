@@ -171,7 +171,7 @@ const ReelCard = ({ reel, isFeedView = false }) => {
           className={`absolute z-[100] bg-black/30 backdrop-blur-md rounded-full cursor-pointer hover:bg-black/50 transition-all border border-white/10 ${
             isFeedView
               ? "top-4 right-4 p-1.5"
-              : "top-[80px] right-6 p-2"
+              : "top-4 right-6 p-2"
           }`}
           onClick={() => setIsMuted((prev) => !prev)}
         >
@@ -225,7 +225,7 @@ const ReelCard = ({ reel, isFeedView = false }) => {
             </div>
 
             {/* Bottom Info Overlay */}
-            <div className="absolute bottom-6 left-0 w-full px-5 z-[100] flex flex-col gap-3 bg-gradient-to-t from-black/80 via-black/20 to-transparent pt-10">
+            <div className="absolute bottom-0 left-0 w-full px-5 pb-6 z-[100] flex flex-col gap-3 pt-10">
               <div className="flex items-center gap-3">
                 <div 
                   className="w-10 h-10 rounded-full border-2 border-white/80 p-[2px] cursor-pointer active:scale-90 transition-transform overflow-hidden shadow-lg"

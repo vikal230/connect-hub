@@ -1,148 +1,6 @@
-// import React, { useState } from "react";
-// import { IoIosEye } from "react-icons/io";
-// import { IoIosEyeOff } from "react-icons/io";
-// import logo from "../assets/vite.svg";
-// import { useAuth } from "../hooks/useAuth";
-// import { ClipLoader } from "react-spinners";
-// import { useNavigate } from "react-router-dom";
-
-// const SignIn = () => {
-//   //! state
-//   const [inputClicked, setInputClicked] = useState({
-//     userName: false,
-//     password: false,
-//   });
-//   const [loading, setloading] = useState(false);
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [userName, setUserName] = useState("");
-//   const [password, SetPassword] = useState("");
-//   const navigate = useNavigate();
-//   const [err, setError] = useState("");
-//   //!destructurering
-//   const { handleSignIn } = useAuth();
-//   //! functions
-//   const handleSubmitSignIn = async (e) => {
-//     e.preventDefault();
-//     setloading(true);
-//     setError("");
-//     try {
-//       await handleSignIn({ userName, password });
-//       navigate("/");
-//     } catch (error) {
-//       console.log(error);
-//       setError(error.response?.data?.message);
-//     } finally {
-//       setloading(false);
-//     }
-//   };
-//   return (
-//     <div className="w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center">
-//       <div className="w-[90%] lg:max-w-[60%] h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23]">
-//         <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center justify-center p-[10px] gap-[20px]">
-//           <div className="flex gap-[10px] items-center text-[20px] font-semibold mt-[40px]">
-//             <span className="bg-amber-200 text-gray-800 py-3 px-30 rounded-3xl shadow-md hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out">
-//               Sign In <span className="text-amber-600 font-bold">HYPE</span>
-//             </span>
-//           </div>
-
-//           <div
-//             className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-black"
-//             onClick={() => setInputClicked({ ...inputClicked, userName: true })}
-//           >
-//             <label
-//               htmlFor="userName"
-//               className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.userName ? "top-[-15px]" : ""}`}
-//             >
-//               Enter Your userName
-//             </label>
-//             <input
-//               type="text"
-//               id="userName"
-//               className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
-//               onChange={(e) => setUserName(e.target.value)}
-//               value={userName}
-//               required
-//             />
-//           </div>
-
-//           <div
-//             className="relative flex items-center justify-start w-[90%] h-[50px] rounded-2xl border-2 border-black"
-//             onClick={() => setInputClicked({ ...inputClicked, password: true })}
-//           >
-//             <label
-//               htmlFor="password"
-//               className={`text-gray-700 absolute left-[20px] p-[5px] bg-white text-[15px] ${inputClicked.password ? "top-[-15px]" : ""}`}
-//             >
-//               Enter password
-//             </label>
-//             <input
-//               type={showPassword ? "text" : "password"}
-//               id="password"
-//               name="password"
-//               className="w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0"
-//               onChange={(e) => SetPassword(e.target.value)}
-//               value={password}
-//               required
-//             />
-//             {!showPassword ? (
-//               <IoIosEye
-//                 className="absolute cursor-pointer right-[20px] w-[25px] h-[25px]"
-//                 onClick={() => setShowPassword(true)}
-//               />
-//             ) : (
-//               <IoIosEyeOff
-//                 className="absolute cursor-pointer right-[20px] w-[25px] h-[25px]"
-//                 onClick={() => setShowPassword(false)}
-//               />
-//             )}
-//           </div>
-//           <p
-//             className="w-[90%] px-[20px] cursor-pointer"
-//             onClick={() => navigate("/forgot-password")}
-//           >
-//             forgot password
-//           </p>
-//           {err && <p className="text-red-600">{err}</p>}
-
-//           <button
-//             className={`w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px] rounded-2xl mt-[30px] flex justify-center items-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
-//             onClick={handleSubmitSignIn}
-//             disabled={loading}
-//           >
-//             {loading ? (
-//               <>
-//                 <ClipLoader size={30} color="white" />
-//               </>
-//             ) : (
-//               "Sign In"
-//             )}
-//           </button>
-//           <p className="text-gray-800 cursor-pointer">
-//             Already Have An Account ?{" "}
-//             <span
-//               className="border-b-2 pb-[2px] border-b-black text-black"
-//               onClick={() => navigate("/signup")}
-//             >
-//               Sign Up
-//             </span>
-//           </p>
-//         </div>
-
-//         <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black">
-//           <img src={logo} alt="vite image" />
-//           <p>its a vibe coding way</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SignIn;
-
 
 import React, { useState } from "react";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
-import logo from "../assets/vite.svg";
 import { useAuth } from "../hooks/useAuth";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
@@ -160,6 +18,17 @@ const SignIn = () => {
   const [err, setError] = useState("");
   
   const { handleSignIn } = useAuth();
+
+  const showLoginToast = () => {
+    window.dispatchEvent(
+      new CustomEvent("app-toast", {
+        detail: {
+          message: "Login first and enjoy.",
+          type: "success",
+        },
+      }),
+    );
+  };
   
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
@@ -316,9 +185,46 @@ const SignIn = () => {
           </p>
         </div>
 
-        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#0b0b0b] border-l border-zinc-800 flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px]">
-          <img src={logo} alt="vite image" />
-          <p className="tracking-wide text-zinc-400">We Become What We Think Abouth</p>
+        <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#0b0b0b] border-l border-zinc-800 p-8">
+          <div className="w-full h-full rounded-[28px] border border-zinc-800 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.22),_transparent_38%),linear-gradient(180deg,#111827_0%,#09090b_100%)] flex flex-col justify-between p-8 overflow-hidden">
+            <div className="space-y-3">
+              <p className="text-white text-3xl font-black tracking-tight">
+                Step Into Hype
+              </p>
+              <p className="text-zinc-400 text-sm leading-6 max-w-[320px]">
+                Discover creators, chat instantly, and keep your social world active in one place.
+              </p>
+            </div>
+
+            <div className="relative flex-1 flex items-center justify-center">
+              <div className="absolute w-40 h-40 rounded-full bg-sky-500/20 blur-3xl" />
+              <div className="relative w-[280px] min-h-[280px] rounded-[32px] border border-zinc-700/80 bg-zinc-900/80 p-5 shadow-2xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-zinc-300 text-xs font-semibold">Live Activity</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                </div>
+                <div className="mt-5 space-y-3">
+                  <div className="rounded-2xl bg-zinc-800/80 p-4">
+                    <p className="text-white text-sm font-semibold">New reel trend</p>
+                    <p className="text-zinc-400 text-xs mt-1">People you follow are posting right now.</p>
+                  </div>
+                  <div className="rounded-2xl border border-sky-500/30 bg-sky-500/10 p-4">
+                    <p className="text-sky-300 text-sm font-semibold">24k interactions</p>
+                    <p className="text-zinc-300 text-xs mt-1">Stay connected with stories, posts, and messages.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div onClick={showLoginToast} className="rounded-2xl bg-zinc-800/70 px-3 py-2 text-center text-zinc-300 text-[11px] font-semibold cursor-pointer">Real vibes</div>
+                    <div onClick={showLoginToast} className="rounded-2xl bg-zinc-800/70 px-3 py-2 text-center text-zinc-300 text-[11px] font-semibold cursor-pointer">Fast connect</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold">
+              <span onClick={showLoginToast} className="rounded-full border border-sky-500/40 bg-sky-500/10 px-4 py-2 text-sky-300 cursor-pointer">Social first</span>
+              <span onClick={showLoginToast} className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-zinc-300 cursor-pointer">Smooth experience</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -81,7 +81,7 @@ const MessageArea = () => {
           className="w-11 h-11 rounded-full border-2 border-zinc-800 overflow-hidden cursor-pointer active:scale-90 transition-transform"
           onClick={() => navigate(`/profile/${selectedUser.userName}`)}
         >
-          <img src={selectedUser.profileImage || dp} alt="" className="w-full h-full object-cover" />
+          <img src={selectedUser.profileImage || dp} alt="" className="w-full h-full object-contain bg-zinc-950" />
         </div>
         <div className="flex flex-col">
           <h2 className="text-zinc-100 text-[16px] font-bold tracking-tight">{selectedUser.userName}</h2>
