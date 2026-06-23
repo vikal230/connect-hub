@@ -64,24 +64,38 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [isAuthEntryRoute]);
 
-  useEffect(() => {
-    if (!userData) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!userData) {
+  //     return;
+  //   }
 
-    handleSuggestedUser();
-    handleFetchedAllpost();
-    handleGetAllReels();
-    handleAllstory();
-    handleGetFollowingList();
-    getPrevChatUsersApiHook();
-  }, [userData]);
+  //   handleSuggestedUser();
+  //   handleFetchedAllpost();
+  //   handleGetAllReels();
+  //   handleAllstory();
+  //   handleGetFollowingList();
+  //   getPrevChatUsersApiHook();
+  // }, [userData]);
+
+  // useEffect(() => {
+  //   if (userData) {
+  //     handleAllNotification();
+  //   }
+  // }, [userData]);
 
   useEffect(() => {
-    if (userData) {
-      handleAllNotification();
-    }
-  }, [userData]);
+  if (!userData) return;
+
+  Promise.all([
+    handleFetchedAllpost(),
+    handleAllstory(),
+    handleSuggestedUser(),
+    handleAllNotification(),
+    handleGetAllReels(),
+    handleGetFollowingList(),
+    getPrevChatUsersApiHook(),
+  ]);
+}, [userData]);
 
   useEffect(() => {
     if (userData) {
